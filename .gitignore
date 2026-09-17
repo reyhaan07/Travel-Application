@@ -1,0 +1,23 @@
+# UiPath Studio local / generated folders
+.local/
+.settings/
+.objects/
+.templates/
+.tmh/
+.screenshots/
+
+# Excel lock / temp files
+~$*.xlsx
+~$*.xls
+
+# Runtime output files (folder is kept via .gitkeep)
+Output/*.xlsx
+Output/*.txt
+Output/*.csv
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store

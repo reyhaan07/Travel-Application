@@ -1,0 +1,191 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="DisplayResults" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_RunMode" Type="InArgument(x:String)" />
+    <x:Property Name="in_Source" Type="InArgument(x:String)" />
+    <x:Property Name="in_Destination" Type="InArgument(x:String)" />
+    <x:Property Name="in_TravelDate" Type="InArgument(x:String)" />
+    <x:Property Name="in_FlightFound" Type="InArgument(x:Boolean)" />
+    <x:Property Name="in_FlightRow" Type="InArgument(sd:DataRow)" />
+    <x:Property Name="in_TrainFound" Type="InArgument(x:Boolean)" />
+    <x:Property Name="in_TrainRow" Type="InArgument(sd:DataRow)" />
+    <x:Property Name="in_CheaperMode" Type="InArgument(x:String)" />
+    <x:Property Name="in_CheaperService" Type="InArgument(x:String)" />
+    <x:Property Name="in_CheaperFare" Type="InArgument(x:Double)" />
+    <x:Property Name="in_PriceDifference" Type="InArgument(x:Double)" />
+    <x:Property Name="in_ComparisonMessage" Type="InArgument(x:String)" />
+  </x:Members>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Display Results">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="msgFlight" />
+      <Variable x:TypeArguments="x:String" Name="msgTrain" />
+      <Variable x:TypeArguments="x:String" Name="msgOverall" />
+    </Sequence.Variables>
+    <Assign DisplayName="Flight Header">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[msgFlight]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">["===== OUTPUT 1 of 3 : CHEAPEST FLIGHT =====" + Environment.NewLine + "(" + in_RunMode + " MODE - sample/demo data, not live prices)" + Environment.NewLine + "Route: " + in_Source + " to " + in_Destination + Environment.NewLine + "Date : " + in_TravelDate + Environment.NewLine + Environment.NewLine]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <If DisplayName="Flight Found?">
+      <If.Condition>
+        <InArgument x:TypeArguments="x:Boolean">[in_FlightFound AndAlso in_FlightRow IsNot Nothing]</InArgument>
+      </If.Condition>
+      <If.Then>
+        <Assign DisplayName="Append Flight Details">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:String">[msgFlight]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:String">[msgFlight + "Airline         : " + in_FlightRow("Airline").ToString + Environment.NewLine + "Flight Number   : " + in_FlightRow("FlightNumber").ToString + Environment.NewLine + "Departure Time  : " + in_FlightRow("DepartureTime").ToString + Environment.NewLine + "Arrival Time    : " + in_FlightRow("ArrivalTime").ToString + Environment.NewLine + "Duration        : " + in_FlightRow("Duration").ToString + Environment.NewLine + "Fare            : Rs. " + in_FlightRow("Fare").ToString]</InArgument>
+          </Assign.Value>
+        </Assign>
+      </If.Then>
+      <If.Else>
+        <Assign DisplayName="Append No Flight">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:String">[msgFlight]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:String">[msgFlight + "No valid flight was found for this journey."]</InArgument>
+          </Assign.Value>
+        </Assign>
+      </If.Else>
+    </If>
+    <ui:MessageBox Caption="OUTPUT 1 of 3 : Cheapest Flight" DisplayName="Show Cheapest Flight">
+      <ui:MessageBox.Text>
+        <InArgument x:TypeArguments="x:String">[msgFlight]</InArgument>
+      </ui:MessageBox.Text>
+    </ui:MessageBox>
+    <Assign DisplayName="Train Header">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[msgTrain]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">["===== OUTPUT 2 of 3 : CHEAPEST TRAIN =====" + Environment.NewLine + "(" + in_RunMode + " MODE - sample/demo data, not live prices)" + Environment.NewLine + "Route: " + in_Source + " to " + in_Destination + Environment.NewLine + "Date : " + in_TravelDate + Environment.NewLine + Environment.NewLine]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <If DisplayName="Train Found?">
+      <If.Condition>
+        <InArgument x:TypeArguments="x:Boolean">[in_TrainFound AndAlso in_TrainRow IsNot Nothing]</InArgument>
+      </If.Condition>
+      <If.Then>
+        <Assign DisplayName="Append Train Details">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:String">[msgTrain]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:String">[msgTrain + "Train Name      : " + in_TrainRow("TrainName").ToString + Environment.NewLine + "Train Number    : " + in_TrainRow("TrainNumber").ToString + Environment.NewLine + "Departure Time  : " + in_TrainRow("DepartureTime").ToString + Environment.NewLine + "Arrival Time    : " + in_TrainRow("ArrivalTime").ToString + Environment.NewLine + "Duration        : " + in_TrainRow("Duration").ToString + Environment.NewLine + "Fare            : Rs. " + in_TrainRow("Fare").ToString]</InArgument>
+          </Assign.Value>
+        </Assign>
+      </If.Then>
+      <If.Else>
+        <Assign DisplayName="Append No Train">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:String">[msgTrain]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:String">[msgTrain + "No valid train was found for this journey."]</InArgument>
+          </Assign.Value>
+        </Assign>
+      </If.Else>
+    </If>
+    <ui:MessageBox Caption="OUTPUT 2 of 3 : Cheapest Train" DisplayName="Show Cheapest Train">
+      <ui:MessageBox.Text>
+        <InArgument x:TypeArguments="x:String">[msgTrain]</InArgument>
+      </ui:MessageBox.Text>
+    </ui:MessageBox>
+    <Assign DisplayName="Overall Header">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[msgOverall]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">["===== OUTPUT 3 of 3 : CHEAPEST OVERALL =====" + Environment.NewLine + "(" + in_RunMode + " MODE - sample/demo data, not live prices)" + Environment.NewLine + "Route: " + in_Source + " to " + in_Destination + Environment.NewLine + Environment.NewLine]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <If DisplayName="Any Option Found?">
+      <If.Condition>
+        <InArgument x:TypeArguments="x:Boolean">[in_CheaperMode &lt;&gt; "None"]</InArgument>
+      </If.Condition>
+      <If.Then>
+        <Assign DisplayName="Append Overall Details">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:String">[msgOverall]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:String">[msgOverall + "Cheaper Transport Mode : " + in_CheaperMode + Environment.NewLine + "Service Name           : " + in_CheaperService + Environment.NewLine + "Fare                   : Rs. " + in_CheaperFare.ToString + Environment.NewLine + "Price Difference       : Rs. " + in_PriceDifference.ToString + " (versus the other option)" + Environment.NewLine + Environment.NewLine + in_ComparisonMessage]</InArgument>
+          </Assign.Value>
+        </Assign>
+      </If.Then>
+      <If.Else>
+        <Assign DisplayName="Append No Option">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:String">[msgOverall]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:String">[msgOverall + in_ComparisonMessage]</InArgument>
+          </Assign.Value>
+        </Assign>
+      </If.Else>
+    </If>
+    <ui:MessageBox Caption="OUTPUT 3 of 3 : Cheapest Overall" DisplayName="Show Cheapest Overall">
+      <ui:MessageBox.Text>
+        <InArgument x:TypeArguments="x:String">[msgOverall]</InArgument>
+      </ui:MessageBox.Text>
+    </ui:MessageBox>
+  </Sequence>
+</Activity>

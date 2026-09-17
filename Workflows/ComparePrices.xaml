@@ -1,0 +1,301 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="ComparePrices" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_FlightFound" Type="InArgument(x:Boolean)" />
+    <x:Property Name="in_FlightFare" Type="InArgument(x:Double)" />
+    <x:Property Name="in_FlightService" Type="InArgument(x:String)" />
+    <x:Property Name="in_TrainFound" Type="InArgument(x:Boolean)" />
+    <x:Property Name="in_TrainFare" Type="InArgument(x:Double)" />
+    <x:Property Name="in_TrainService" Type="InArgument(x:String)" />
+    <x:Property Name="out_CheaperMode" Type="OutArgument(x:String)" />
+    <x:Property Name="out_CheaperService" Type="OutArgument(x:String)" />
+    <x:Property Name="out_CheaperFare" Type="OutArgument(x:Double)" />
+    <x:Property Name="out_PriceDifference" Type="OutArgument(x:Double)" />
+    <x:Property Name="out_Message" Type="OutArgument(x:String)" />
+  </x:Members>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Compare Prices">
+    <Assign DisplayName="Init Mode = None">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_CheaperMode]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">["None"]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Init Service = empty">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_CheaperService]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[""]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Init CheaperFare = 0">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:Double">[out_CheaperFare]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:Double">[0]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Init PriceDifference = 0">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:Double">[out_PriceDifference]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:Double">[0]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Init Message">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_Message]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">["No valid flight or train options were found to compare."]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <If DisplayName="Both Flight And Train Available">
+      <If.Condition>
+        <InArgument x:TypeArguments="x:Boolean">[in_FlightFound AndAlso in_TrainFound]</InArgument>
+      </If.Condition>
+      <If.Then>
+        <If DisplayName="Flight Costlier Than Train">
+          <If.Condition>
+            <InArgument x:TypeArguments="x:Boolean">[in_FlightFare &gt; in_TrainFare]</InArgument>
+          </If.Condition>
+          <If.Then>
+            <Sequence DisplayName="Train Is Cheaper">
+              <Assign DisplayName="Mode = Train">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[out_CheaperMode]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">["Train"]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Service = Train Service">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[out_CheaperService]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">[in_TrainService]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Fare = Train Fare">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Double">[out_CheaperFare]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Double">[in_TrainFare]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Diff = Flight - Train">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Double">[out_PriceDifference]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Double">[in_FlightFare - in_TrainFare]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Message (Train cheaper)">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[out_Message]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">["The TRAIN is the cheaper option, saving Rs. " + (in_FlightFare - in_TrainFare).ToString + " compared with the cheapest flight."]</InArgument>
+                </Assign.Value>
+              </Assign>
+            </Sequence>
+          </If.Then>
+          <If.Else>
+            <Sequence DisplayName="Flight Is Cheaper Or Equal">
+              <Assign DisplayName="Mode = Flight">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[out_CheaperMode]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">["Flight"]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Service = Flight Service">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[out_CheaperService]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">[in_FlightService]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Fare = Flight Fare">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Double">[out_CheaperFare]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Double">[in_FlightFare]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Diff = Train - Flight">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Double">[out_PriceDifference]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Double">[in_TrainFare - in_FlightFare]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Message (Flight cheaper or equal)">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[out_Message]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">[If(in_FlightFare = in_TrainFare, "The flight and train fares are equal (Rs. " + in_FlightFare.ToString + "). The flight is shown as the cheapest option.", "The FLIGHT is the cheaper option, saving Rs. " + (in_TrainFare - in_FlightFare).ToString + " compared with the cheapest train.")]</InArgument>
+                </Assign.Value>
+              </Assign>
+            </Sequence>
+          </If.Else>
+        </If>
+      </If.Then>
+      <If.Else>
+        <If DisplayName="Only Flight Available">
+          <If.Condition>
+            <InArgument x:TypeArguments="x:Boolean">[in_FlightFound]</InArgument>
+          </If.Condition>
+          <If.Then>
+            <Sequence DisplayName="Flight Only">
+              <Assign DisplayName="Mode = Flight (only)">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[out_CheaperMode]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">["Flight"]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Service = Flight (only)">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[out_CheaperService]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">[in_FlightService]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Fare = Flight (only)">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Double">[out_CheaperFare]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Double">[in_FlightFare]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Message (Flight only)">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[out_Message]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">["Only flight data was available, so the flight is the cheapest available option by default."]</InArgument>
+                </Assign.Value>
+              </Assign>
+            </Sequence>
+          </If.Then>
+          <If.Else>
+            <If DisplayName="Only Train Available">
+              <If.Condition>
+                <InArgument x:TypeArguments="x:Boolean">[in_TrainFound]</InArgument>
+              </If.Condition>
+              <If.Then>
+                <Sequence DisplayName="Train Only">
+                  <Assign DisplayName="Mode = Train (only)">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">[out_CheaperMode]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">["Train"]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Service = Train (only)">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">[out_CheaperService]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">[in_TrainService]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Fare = Train (only)">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Double">[out_CheaperFare]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Double">[in_TrainFare]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign DisplayName="Message (Train only)">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">[out_Message]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">["Only train data was available, so the train is the cheapest available option by default."]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                </Sequence>
+              </If.Then>
+            </If>
+          </If.Else>
+        </If>
+      </If.Else>
+    </If>
+    <ui:LogMessage DisplayName="Log Comparison Result" Level="Info">
+      <ui:LogMessage.Message>
+        <InArgument x:TypeArguments="x:String">["Comparison result -> Cheaper mode: " + out_CheaperMode + " | Service: " + out_CheaperService + " | Fare: " + out_CheaperFare.ToString + " | Difference: " + out_PriceDifference.ToString]</InArgument>
+      </ui:LogMessage.Message>
+    </ui:LogMessage>
+  </Sequence>
+</Activity>

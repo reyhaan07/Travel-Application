@@ -1,0 +1,145 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="ExtractTrainData" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_RunMode" Type="InArgument(x:String)" />
+    <x:Property Name="in_Source" Type="InArgument(x:String)" />
+    <x:Property Name="in_Destination" Type="InArgument(x:String)" />
+    <x:Property Name="in_TravelDate" Type="InArgument(x:String)" />
+    <x:Property Name="in_DemoFilePath" Type="InArgument(x:String)" />
+    <x:Property Name="in_LiveSiteUrl" Type="InArgument(x:String)" />
+    <x:Property Name="out_TrainsTable" Type="OutArgument(sd:DataTable)" />
+  </x:Members>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Extract Train Data">
+    <ui:LogMessage DisplayName="Log Train Acquisition" Level="Info">
+      <ui:LogMessage.Message>
+        <InArgument x:TypeArguments="x:String">["Acquiring TRAIN data. RunMode = " + in_RunMode]</InArgument>
+      </ui:LogMessage.Message>
+    </ui:LogMessage>
+    <If DisplayName="Live Mode?">
+      <If.Condition>
+        <InArgument x:TypeArguments="x:Boolean">[in_RunMode = "Live"]</InArgument>
+      </If.Condition>
+      <If.Then>
+        <TryCatch DisplayName="Try Live Train Extraction">
+          <TryCatch.Try>
+            <ui:InvokeWorkflowFile DisplayName="Invoke SearchTrains (Live)" WorkflowFileName="Workflows\SearchTrains.xaml">
+              <ui:InvokeWorkflowFile.Arguments>
+                <scg:Dictionary x:TypeArguments="x:String, Argument">
+                  <InArgument x:TypeArguments="x:String" x:Key="in_Source">[in_Source]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="in_Destination">[in_Destination]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="in_TravelDate">[in_TravelDate]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="in_LiveSiteUrl">[in_LiveSiteUrl]</InArgument>
+                  <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_TrainsTable">[out_TrainsTable]</OutArgument>
+                </scg:Dictionary>
+              </ui:InvokeWorkflowFile.Arguments>
+            </ui:InvokeWorkflowFile>
+          </TryCatch.Try>
+          <TryCatch.Catches>
+            <Catch x:TypeArguments="s:Exception" DisplayName="Catch Live Failure">
+              <ActivityAction x:TypeArguments="s:Exception">
+                <ActivityAction.Argument>
+                  <DelegateInArgument x:TypeArguments="s:Exception" Name="exLive" />
+                </ActivityAction.Argument>
+                <ui:LogMessage DisplayName="Log Live Failure" Level="Warn">
+                  <ui:LogMessage.Message>
+                    <InArgument x:TypeArguments="x:String">["Live train extraction failed: " + exLive.Message + ". Falling back to demo data."]</InArgument>
+                  </ui:LogMessage.Message>
+                </ui:LogMessage>
+              </ActivityAction>
+            </Catch>
+          </TryCatch.Catches>
+        </TryCatch>
+      </If.Then>
+    </If>
+    <If DisplayName="Need Demo Fallback?">
+      <If.Condition>
+        <InArgument x:TypeArguments="x:Boolean">[out_TrainsTable Is Nothing OrElse out_TrainsTable.Rows.Count = 0]</InArgument>
+      </If.Condition>
+      <If.Then>
+        <TryCatch DisplayName="Load Demo Trains">
+          <TryCatch.Try>
+            <Sequence DisplayName="Read Demo Trains Excel">
+              <ui:LogMessage DisplayName="Log Demo Load" Level="Info">
+                <ui:LogMessage.Message>
+                  <InArgument x:TypeArguments="x:String">["Loading DEMO train data from: " + in_DemoFilePath]</InArgument>
+                </ui:LogMessage.Message>
+              </ui:LogMessage>
+              <ui:WorkbookReadRange AddHeaders="True" DataTable="[out_TrainsTable]" DisplayName="Read Demo Trains" Range="" SheetName="Sheet1" WorkbookPath="[in_DemoFilePath]" />
+            </Sequence>
+          </TryCatch.Try>
+          <TryCatch.Catches>
+            <Catch x:TypeArguments="s:Exception" DisplayName="Catch Demo Load Failure">
+              <ActivityAction x:TypeArguments="s:Exception">
+                <ActivityAction.Argument>
+                  <DelegateInArgument x:TypeArguments="s:Exception" Name="exDemo" />
+                </ActivityAction.Argument>
+                <ui:LogMessage DisplayName="Log Demo Failure" Level="Error">
+                  <ui:LogMessage.Message>
+                    <InArgument x:TypeArguments="x:String">["Could not load demo train data (" + in_DemoFilePath + "): " + exDemo.Message]</InArgument>
+                  </ui:LogMessage.Message>
+                </ui:LogMessage>
+              </ActivityAction>
+            </Catch>
+          </TryCatch.Catches>
+        </TryCatch>
+      </If.Then>
+    </If>
+    <ui:LogMessage DisplayName="Log Train Row Count" Level="Info">
+      <ui:LogMessage.Message>
+        <InArgument x:TypeArguments="x:String">["Train rows available: " + If(out_TrainsTable Is Nothing, "0", out_TrainsTable.Rows.Count.ToString)]</InArgument>
+      </ui:LogMessage.Message>
+    </ui:LogMessage>
+  </Sequence>
+</Activity>

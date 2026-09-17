@@ -1,0 +1,105 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="SearchTrains" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_Source" Type="InArgument(x:String)" />
+    <x:Property Name="in_Destination" Type="InArgument(x:String)" />
+    <x:Property Name="in_TravelDate" Type="InArgument(x:String)" />
+    <x:Property Name="in_LiveSiteUrl" Type="InArgument(x:String)" />
+    <x:Property Name="out_TrainsTable" Type="OutArgument(sd:DataTable)" />
+  </x:Members>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Search Trains (LIVE)">
+    <ui:LogMessage DisplayName="Log Live Start" Level="Info">
+      <ui:LogMessage.Message>
+        <InArgument x:TypeArguments="x:String">["LIVE MODE: opening travel site to search trains from " + in_Source + " to " + in_Destination + " on " + in_TravelDate]</InArgument>
+      </ui:LogMessage.Message>
+    </ui:LogMessage>
+    <ui:OpenBrowser BrowserType="Chrome" DisplayName="Open Demo Travel Site" Url="[in_LiveSiteUrl]">
+      <ui:OpenBrowser.Body>
+        <ActivityAction x:TypeArguments="ui:Browser">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="ui:Browser" Name="ContextBrowser" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Fill Form And Search">
+            <ui:TypeInto Activate="True" ClickBeforeTyping="True" DisplayName="Type Source" EmptyField="True" Text="[in_Source]">
+              <ui:TypeInto.Target>
+                <ui:Target Selector="&lt;webctrl id='source' tag='INPUT' /&gt;" WaitForReady="INTERACTIVE" />
+              </ui:TypeInto.Target>
+            </ui:TypeInto>
+            <ui:TypeInto Activate="True" ClickBeforeTyping="True" DisplayName="Type Destination" EmptyField="True" Text="[in_Destination]">
+              <ui:TypeInto.Target>
+                <ui:Target Selector="&lt;webctrl id='destination' tag='INPUT' /&gt;" WaitForReady="INTERACTIVE" />
+              </ui:TypeInto.Target>
+            </ui:TypeInto>
+            <ui:TypeInto Activate="True" ClickBeforeTyping="True" DisplayName="Type Travel Date" EmptyField="True" Text="[in_TravelDate]">
+              <ui:TypeInto.Target>
+                <ui:Target Selector="&lt;webctrl id='travelDate' tag='INPUT' /&gt;" WaitForReady="INTERACTIVE" />
+              </ui:TypeInto.Target>
+            </ui:TypeInto>
+            <ui:Click ClickType="CLICK_SINGLE" DisplayName="Click Search Fares" MouseButton="BTN_LEFT">
+              <ui:Click.Target>
+                <ui:Target Selector="&lt;webctrl id='searchBtn' tag='BUTTON' /&gt;" WaitForReady="INTERACTIVE" />
+              </ui:Click.Target>
+            </ui:Click>
+            <ui:LogMessage DisplayName="Log Extraction Note" Level="Warn">
+              <ui:LogMessage.Message>
+                <InArgument x:TypeArguments="x:String">["LIVE train extraction step is not wired yet. In UiPath Studio, add an 'Extract Table Data' (Data Scraping) activity here targeting the results table (HTML id='trainsTable') and assign its output to out_TrainsTable. Leaving it empty now so the caller safely uses DEMO data."]</InArgument>
+              </ui:LogMessage.Message>
+            </ui:LogMessage>
+          </Sequence>
+        </ActivityAction>
+      </ui:OpenBrowser.Body>
+    </ui:OpenBrowser>
+  </Sequence>
+</Activity>

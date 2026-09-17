@@ -1,0 +1,8 @@
+# Treat Excel demo data as binary (no diff / no line-ending normalization)
+*.xlsx binary
+*.xls binary
+
+# UiPath workflow and config files are text
+*.xaml text
+*.json text
+*.md text

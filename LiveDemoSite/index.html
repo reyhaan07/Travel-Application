@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo Travel Fares - Local Test Site</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #f4f6f9; color: #1f2933; }
+    header { background: #0b5394; color: #fff; padding: 18px 24px; }
+    header h1 { margin: 0 0 4px; font-size: 22px; }
+    header p { margin: 0; font-size: 13px; opacity: 0.9; }
+    .demo-banner {
+      background: #fff3cd; color: #7a5b00; border: 1px solid #ffe08a;
+      padding: 10px 24px; font-size: 14px; font-weight: bold; text-align: center;
+    }
+    main { max-width: 900px; margin: 20px auto; padding: 0 16px; }
+    .card { background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; padding: 18px 20px; margin-bottom: 22px; }
+    .search-form { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+    .field { display: flex; flex-direction: column; }
+    .field label { font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #52606d; }
+    .field input, .field select { padding: 8px 10px; border: 1px solid #cbd2d9; border-radius: 5px; min-width: 160px; font-size: 14px; }
+    button { background: #0b5394; color: #fff; border: 0; border-radius: 5px; padding: 10px 22px; font-size: 14px; cursor: pointer; }
+    button:hover { background: #08406f; }
+    h2 { font-size: 18px; border-bottom: 2px solid #0b5394; padding-bottom: 6px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+    th, td { border: 1px solid #dfe3e8; padding: 8px 10px; text-align: left; }
+    th { background: #eef2f7; }
+    tbody tr:nth-child(even) { background: #f8fafc; }
+    .route-line { font-size: 14px; color: #52606d; margin: 4px 0 0; }
+    footer { text-align: center; font-size: 12px; color: #7b8794; padding: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demo Travel Fares</h1>
+    <p>Local test website for the Centralized Travel Price Comparison System (UiPath)</p>
+  </header>
+
+  <div class="demo-banner">
+    DEMO DATA - These are static sample fares for automation practice only. They are NOT live prices and are NOT from MakeMyTrip or any real travel provider.
+  </div>
+
+  <main>
+    <div class="card">
+      <form class="search-form" id="searchForm" onsubmit="return runSearch();">
+        <div class="field">
+          <label for="source">From (Source)</label>
+          <input type="text" id="source" name="source" value="Chennai" />
+        </div>
+        <div class="field">
+          <label for="destination">To (Destination)</label>
+          <input type="text" id="destination" name="destination" value="New Delhi" />
+        </div>
+        <div class="field">
+          <label for="travelDate">Travel Date</label>
+          <input type="text" id="travelDate" name="travelDate" value="2026-10-05" />
+        </div>
+        <div class="field">
+          <label for="mode">Mode</label>
+          <select id="mode" name="mode">
+            <option value="Both">Both</option>
+            <option value="Flights">Flights</option>
+            <option value="Trains">Trains</option>
+          </select>
+        </div>
+        <button type="submit" id="searchBtn">Search Fares</button>
+      </form>
+      <p class="route-line" id="routeLine">Showing sample fares for: Chennai to New Delhi</p>
+    </div>
+
+    <div class="card" id="flightsSection">
+      <h2>Available Flights</h2>
+      <table id="flightsTable">
+        <thead>
+          <tr>
+            <th>Airline</th>
+            <th>FlightNumber</th>
+            <th>DepartureTime</th>
+            <th>ArrivalTime</th>
+            <th>Duration</th>
+            <th>Fare</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>IndiGo</td><td>6E-2043</td><td>06:10</td><td>08:55</td><td>2h 45m</td><td>4899</td></tr>
+          <tr><td>Air India</td><td>AI-539</td><td>09:30</td><td>12:20</td><td>2h 50m</td><td>5650</td></tr>
+          <tr><td>Vistara</td><td>UK-822</td><td>13:05</td><td>15:55</td><td>2h 50m</td><td>6120</td></tr>
+          <tr><td>SpiceJet</td><td>SG-401</td><td>18:40</td><td>21:35</td><td>2h 55m</td><td>4499</td></tr>
+          <tr><td>Akasa Air</td><td>QP-1371</td><td>21:15</td><td>00:05</td><td>2h 50m</td><td>5210</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" id="trainsSection">
+      <h2>Available Trains</h2>
+      <table id="trainsTable">
+        <thead>
+          <tr>
+            <th>TrainName</th>
+            <th>TrainNumber</th>
+            <th>DepartureTime</th>
+            <th>ArrivalTime</th>
+            <th>Duration</th>
+            <th>Fare</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Tamil Nadu SF Express</td><td>12621</td><td>22:00</td><td>07:15</td><td>33h 15m</td><td>2145</td></tr>
+          <tr><td>Grand Trunk Express</td><td>12615</td><td>19:15</td><td>06:50</td><td>35h 35m</td><td>1985</td></tr>
+          <tr><td>Rajdhani Express</td><td>12433</td><td>06:05</td><td>10:30</td><td>28h 25m</td><td>3560</td></tr>
+          <tr><td>Sanghamitra Express</td><td>12295</td><td>12:40</td><td>22:10</td><td>33h 30m</td><td>2260</td></tr>
+          <tr><td>AP Duronto Express</td><td>12283</td><td>15:20</td><td>20:00</td><td>28h 40m</td><td>3120</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer>
+      Local demo site &bull; No network calls &bull; Safe to automate for learning UiPath data extraction.
+    </footer>
+  </main>
+
+  <script>
+    // Purely cosmetic: updates the route label. There is no backend and no live data.
+    function runSearch() {
+      var src = document.getElementById('source').value || 'Source';
+      var dst = document.getElementById('destination').value || 'Destination';
+      var mode = document.getElementById('mode').value;
+      document.getElementById('routeLine').textContent =
+        'Showing sample fares for: ' + src + ' to ' + dst + '  (mode: ' + mode + ')';
+      document.getElementById('flightsSection').style.display = (mode === 'Trains') ? 'none' : 'block';
+      document.getElementById('trainsSection').style.display = (mode === 'Flights') ? 'none' : 'block';
+      return false; // prevent page navigation
+    }
+  </script>
+</body>
+</html>

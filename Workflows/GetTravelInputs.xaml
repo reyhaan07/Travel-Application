@@ -1,0 +1,150 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="GetTravelInputs" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="out_Source" Type="OutArgument(x:String)" />
+    <x:Property Name="out_Destination" Type="OutArgument(x:String)" />
+    <x:Property Name="out_TravelDate" Type="OutArgument(x:String)" />
+    <x:Property Name="out_SearchMode" Type="OutArgument(x:String)" />
+    <x:Property Name="out_RunMode" Type="OutArgument(x:String)" />
+  </x:Members>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Get Travel Inputs">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="tempSource" />
+      <Variable x:TypeArguments="x:String" Name="tempDest" />
+      <Variable x:TypeArguments="x:String" Name="tempDate" />
+      <Variable x:TypeArguments="x:String" Name="tempMode" />
+      <Variable x:TypeArguments="x:String" Name="tempRun" />
+      <Variable x:TypeArguments="x:String" Name="defaultDate" />
+    </Sequence.Variables>
+    <Assign DisplayName="Set Default Date (today + 20 days)">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[defaultDate]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[DateTime.Now.AddDays(20).ToString("yyyy-MM-dd")]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:InputDialog DisplayName="Ask Source" Label="Enter SOURCE city or station. Press OK to use the default (Chennai)." Title="Journey 1 of 5 - Source">
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:String">[tempSource]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
+    <Assign DisplayName="Set Source (with default)">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_Source]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(tempSource), "Chennai", tempSource.Trim)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:InputDialog DisplayName="Ask Destination" Label="Enter DESTINATION city or station. Press OK to use the default (New Delhi)." Title="Journey 2 of 5 - Destination">
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:String">[tempDest]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
+    <Assign DisplayName="Set Destination (with default)">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_Destination]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(tempDest), "New Delhi", tempDest.Trim)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:InputDialog DisplayName="Ask Travel Date" Label="Enter TRAVEL DATE (yyyy-MM-dd). Press OK to use a default future date." Title="Journey 3 of 5 - Travel Date">
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:String">[tempDate]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
+    <Assign DisplayName="Set Travel Date (with default)">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_TravelDate]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(tempDate), defaultDate, tempDate.Trim)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:InputDialog DisplayName="Ask Search Mode" Label="Type Both, Flights, or Trains. Press OK for the default (Both)." Title="Journey 4 of 5 - What to Search">
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:String">[tempMode]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
+    <Assign DisplayName="Normalize Search Mode">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_SearchMode]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(tempMode), "Both", If(tempMode.ToLower.Contains("flight") AndAlso Not tempMode.ToLower.Contains("train"), "Flights", If(tempMode.ToLower.Contains("train") AndAlso Not tempMode.ToLower.Contains("flight"), "Trains", "Both")))]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:InputDialog DisplayName="Ask Run Mode" Label="Type Demo or Live. Press OK for the default (Demo). DEMO uses local sample data and always works." Title="Journey 5 of 5 - Run Mode">
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:String">[tempRun]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
+    <Assign DisplayName="Normalize Run Mode">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_RunMode]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(tempRun), "Demo", If(tempRun.ToLower.Contains("live"), "Live", "Demo"))]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:LogMessage DisplayName="Log Collected Inputs" Level="Info">
+      <ui:LogMessage.Message>
+        <InArgument x:TypeArguments="x:String">["Inputs collected -> Source: " + out_Source + " | Destination: " + out_Destination + " | Date: " + out_TravelDate + " | SearchMode: " + out_SearchMode + " | RunMode: " + out_RunMode]</InArgument>
+      </ui:LogMessage.Message>
+    </ui:LogMessage>
+  </Sequence>
+</Activity>

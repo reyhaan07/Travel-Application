@@ -1,0 +1,2 @@
+# This folder holds files created at run time (FlightResults.xlsx, TrainResults.xlsx).
+# It is intentionally kept in the repository so the project can write here on first run.

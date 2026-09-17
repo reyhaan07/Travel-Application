@@ -1,0 +1,393 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Main">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="in_Source" />
+      <Variable x:TypeArguments="x:String" Name="in_Destination" />
+      <Variable x:TypeArguments="x:String" Name="in_TravelDate" />
+      <Variable x:TypeArguments="x:String" Name="in_SearchMode" />
+      <Variable x:TypeArguments="x:String" Name="in_RunMode" />
+      <Variable x:TypeArguments="x:String" Name="ProjectDir" />
+      <Variable x:TypeArguments="x:String" Name="DemoFlightsPath" />
+      <Variable x:TypeArguments="x:String" Name="DemoTrainsPath" />
+      <Variable x:TypeArguments="x:String" Name="OutputDir" />
+      <Variable x:TypeArguments="x:String" Name="LiveSiteUrl" />
+      <Variable x:TypeArguments="x:String" Name="FlightOutPath" />
+      <Variable x:TypeArguments="x:String" Name="TrainOutPath" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_Flights" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_Trains" />
+      <Variable x:TypeArguments="x:Boolean" Name="flightFound" />
+      <Variable x:TypeArguments="x:Boolean" Name="trainFound" />
+      <Variable x:TypeArguments="sd:DataRow" Name="flightRow" />
+      <Variable x:TypeArguments="sd:DataRow" Name="trainRow" />
+      <Variable x:TypeArguments="x:Double" Name="flightFare" />
+      <Variable x:TypeArguments="x:Double" Name="trainFare" />
+      <Variable x:TypeArguments="x:String" Name="flightService" />
+      <Variable x:TypeArguments="x:String" Name="trainService" />
+      <Variable x:TypeArguments="x:String" Name="cheaperMode" />
+      <Variable x:TypeArguments="x:String" Name="cheaperService" />
+      <Variable x:TypeArguments="x:String" Name="comparisonMessage" />
+      <Variable x:TypeArguments="x:Double" Name="cheaperFare" />
+      <Variable x:TypeArguments="x:Double" Name="priceDifference" />
+    </Sequence.Variables>
+    <TryCatch DisplayName="Main Safety Net">
+      <TryCatch.Try>
+        <Sequence DisplayName="Main Process">
+          <ui:LogMessage DisplayName="Log Start" Level="Info">
+            <ui:LogMessage.Message>
+              <InArgument x:TypeArguments="x:String">["===== Centralized Travel Price Comparison System started ====="]</InArgument>
+            </ui:LogMessage.Message>
+          </ui:LogMessage>
+          <Assign DisplayName="Set Project Directory">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[ProjectDir]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">[System.IO.Directory.GetCurrentDirectory()]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Set Demo Flights Path">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[DemoFlightsPath]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">[System.IO.Path.Combine(ProjectDir, "Data", "DemoFlights.xlsx")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Set Demo Trains Path">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[DemoTrainsPath]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">[System.IO.Path.Combine(ProjectDir, "Data", "DemoTrains.xlsx")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Set Output Directory">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[OutputDir]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">[System.IO.Path.Combine(ProjectDir, "Output")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Set Live Site Url">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[LiveSiteUrl]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">["file:///" + ProjectDir.Replace("\", "/") + "/LiveDemoSite/index.html"]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Set Flight Output Path">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[FlightOutPath]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">[System.IO.Path.Combine(OutputDir, "FlightResults.xlsx")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Set Train Output Path">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[TrainOutPath]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">[System.IO.Path.Combine(OutputDir, "TrainResults.xlsx")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Flowchart DisplayName="Travel Comparison Process">
+            <Flowchart.StartNode>
+              <x:Reference>__ReferenceID0</x:Reference>
+            </Flowchart.StartNode>
+            <FlowStep x:Name="__ReferenceID0">
+              <ui:InvokeWorkflowFile DisplayName="1. Get Travel Inputs" WorkflowFileName="Workflows\GetTravelInputs.xaml">
+                <ui:InvokeWorkflowFile.Arguments>
+                  <scg:Dictionary x:TypeArguments="x:String, Argument">
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_Source">[in_Source]</OutArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_Destination">[in_Destination]</OutArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_TravelDate">[in_TravelDate]</OutArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_SearchMode">[in_SearchMode]</OutArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_RunMode">[in_RunMode]</OutArgument>
+                  </scg:Dictionary>
+                </ui:InvokeWorkflowFile.Arguments>
+              </ui:InvokeWorkflowFile>
+              <FlowStep.Next>
+                <FlowStep>
+                  <Sequence DisplayName="2. Acquire Data">
+                    <If DisplayName="Search Flights?">
+                      <If.Condition>
+                        <InArgument x:TypeArguments="x:Boolean">[in_SearchMode = "Flights" OrElse in_SearchMode = "Both"]</InArgument>
+                      </If.Condition>
+                      <If.Then>
+                        <ui:InvokeWorkflowFile DisplayName="Invoke ExtractFlightData" WorkflowFileName="Workflows\ExtractFlightData.xaml">
+                          <ui:InvokeWorkflowFile.Arguments>
+                            <scg:Dictionary x:TypeArguments="x:String, Argument">
+                              <InArgument x:TypeArguments="x:String" x:Key="in_RunMode">[in_RunMode]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="in_Source">[in_Source]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="in_Destination">[in_Destination]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="in_TravelDate">[in_TravelDate]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="in_DemoFilePath">[DemoFlightsPath]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="in_LiveSiteUrl">[LiveSiteUrl]</InArgument>
+                              <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_FlightsTable">[dt_Flights]</OutArgument>
+                            </scg:Dictionary>
+                          </ui:InvokeWorkflowFile.Arguments>
+                        </ui:InvokeWorkflowFile>
+                      </If.Then>
+                    </If>
+                    <If DisplayName="Search Trains?">
+                      <If.Condition>
+                        <InArgument x:TypeArguments="x:Boolean">[in_SearchMode = "Trains" OrElse in_SearchMode = "Both"]</InArgument>
+                      </If.Condition>
+                      <If.Then>
+                        <ui:InvokeWorkflowFile DisplayName="Invoke ExtractTrainData" WorkflowFileName="Workflows\ExtractTrainData.xaml">
+                          <ui:InvokeWorkflowFile.Arguments>
+                            <scg:Dictionary x:TypeArguments="x:String, Argument">
+                              <InArgument x:TypeArguments="x:String" x:Key="in_RunMode">[in_RunMode]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="in_Source">[in_Source]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="in_Destination">[in_Destination]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="in_TravelDate">[in_TravelDate]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="in_DemoFilePath">[DemoTrainsPath]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="in_LiveSiteUrl">[LiveSiteUrl]</InArgument>
+                              <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_TrainsTable">[dt_Trains]</OutArgument>
+                            </scg:Dictionary>
+                          </ui:InvokeWorkflowFile.Arguments>
+                        </ui:InvokeWorkflowFile>
+                      </If.Then>
+                    </If>
+                  </Sequence>
+                  <FlowStep.Next>
+                    <FlowStep>
+                      <Sequence DisplayName="3. Find Cheapest Options">
+                        <If DisplayName="Have Flights?">
+                          <If.Condition>
+                            <InArgument x:TypeArguments="x:Boolean">[dt_Flights IsNot Nothing AndAlso dt_Flights.Rows.Count &gt; 0]</InArgument>
+                          </If.Condition>
+                          <If.Then>
+                            <ui:InvokeWorkflowFile DisplayName="Invoke FindCheapestFlight" WorkflowFileName="Workflows\FindCheapestFlight.xaml">
+                              <ui:InvokeWorkflowFile.Arguments>
+                                <scg:Dictionary x:TypeArguments="x:String, Argument">
+                                  <InArgument x:TypeArguments="sd:DataTable" x:Key="in_FlightsTable">[dt_Flights]</InArgument>
+                                  <OutArgument x:TypeArguments="x:Boolean" x:Key="out_Found">[flightFound]</OutArgument>
+                                  <OutArgument x:TypeArguments="sd:DataRow" x:Key="out_Row">[flightRow]</OutArgument>
+                                  <OutArgument x:TypeArguments="x:Double" x:Key="out_Fare">[flightFare]</OutArgument>
+                                </scg:Dictionary>
+                              </ui:InvokeWorkflowFile.Arguments>
+                            </ui:InvokeWorkflowFile>
+                          </If.Then>
+                        </If>
+                        <If DisplayName="Have Trains?">
+                          <If.Condition>
+                            <InArgument x:TypeArguments="x:Boolean">[dt_Trains IsNot Nothing AndAlso dt_Trains.Rows.Count &gt; 0]</InArgument>
+                          </If.Condition>
+                          <If.Then>
+                            <ui:InvokeWorkflowFile DisplayName="Invoke FindCheapestTrain" WorkflowFileName="Workflows\FindCheapestTrain.xaml">
+                              <ui:InvokeWorkflowFile.Arguments>
+                                <scg:Dictionary x:TypeArguments="x:String, Argument">
+                                  <InArgument x:TypeArguments="sd:DataTable" x:Key="in_TrainsTable">[dt_Trains]</InArgument>
+                                  <OutArgument x:TypeArguments="x:Boolean" x:Key="out_Found">[trainFound]</OutArgument>
+                                  <OutArgument x:TypeArguments="sd:DataRow" x:Key="out_Row">[trainRow]</OutArgument>
+                                  <OutArgument x:TypeArguments="x:Double" x:Key="out_Fare">[trainFare]</OutArgument>
+                                </scg:Dictionary>
+                              </ui:InvokeWorkflowFile.Arguments>
+                            </ui:InvokeWorkflowFile>
+                          </If.Then>
+                        </If>
+                        <Assign DisplayName="Build Flight Service Name">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[flightService]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[If(flightFound AndAlso flightRow IsNot Nothing, flightRow("Airline").ToString + " " + flightRow("FlightNumber").ToString, "N/A")]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <Assign DisplayName="Build Train Service Name">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[trainService]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[If(trainFound AndAlso trainRow IsNot Nothing, trainRow("TrainName").ToString + " " + trainRow("TrainNumber").ToString, "N/A")]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                      </Sequence>
+                      <FlowStep.Next>
+                        <FlowStep>
+                          <ui:InvokeWorkflowFile DisplayName="4. Compare Prices" WorkflowFileName="Workflows\ComparePrices.xaml">
+                            <ui:InvokeWorkflowFile.Arguments>
+                              <scg:Dictionary x:TypeArguments="x:String, Argument">
+                                <InArgument x:TypeArguments="x:Boolean" x:Key="in_FlightFound">[flightFound]</InArgument>
+                                <InArgument x:TypeArguments="x:Double" x:Key="in_FlightFare">[flightFare]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="in_FlightService">[flightService]</InArgument>
+                                <InArgument x:TypeArguments="x:Boolean" x:Key="in_TrainFound">[trainFound]</InArgument>
+                                <InArgument x:TypeArguments="x:Double" x:Key="in_TrainFare">[trainFare]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="in_TrainService">[trainService]</InArgument>
+                                <OutArgument x:TypeArguments="x:String" x:Key="out_CheaperMode">[cheaperMode]</OutArgument>
+                                <OutArgument x:TypeArguments="x:String" x:Key="out_CheaperService">[cheaperService]</OutArgument>
+                                <OutArgument x:TypeArguments="x:Double" x:Key="out_CheaperFare">[cheaperFare]</OutArgument>
+                                <OutArgument x:TypeArguments="x:Double" x:Key="out_PriceDifference">[priceDifference]</OutArgument>
+                                <OutArgument x:TypeArguments="x:String" x:Key="out_Message">[comparisonMessage]</OutArgument>
+                              </scg:Dictionary>
+                            </ui:InvokeWorkflowFile.Arguments>
+                          </ui:InvokeWorkflowFile>
+                          <FlowStep.Next>
+                            <FlowStep>
+                              <ui:InvokeWorkflowFile DisplayName="5. Display Results" WorkflowFileName="Workflows\DisplayResults.xaml">
+                                <ui:InvokeWorkflowFile.Arguments>
+                                  <scg:Dictionary x:TypeArguments="x:String, Argument">
+                                    <InArgument x:TypeArguments="x:String" x:Key="in_RunMode">[in_RunMode]</InArgument>
+                                    <InArgument x:TypeArguments="x:String" x:Key="in_Source">[in_Source]</InArgument>
+                                    <InArgument x:TypeArguments="x:String" x:Key="in_Destination">[in_Destination]</InArgument>
+                                    <InArgument x:TypeArguments="x:String" x:Key="in_TravelDate">[in_TravelDate]</InArgument>
+                                    <InArgument x:TypeArguments="x:Boolean" x:Key="in_FlightFound">[flightFound]</InArgument>
+                                    <InArgument x:TypeArguments="sd:DataRow" x:Key="in_FlightRow">[flightRow]</InArgument>
+                                    <InArgument x:TypeArguments="x:Boolean" x:Key="in_TrainFound">[trainFound]</InArgument>
+                                    <InArgument x:TypeArguments="sd:DataRow" x:Key="in_TrainRow">[trainRow]</InArgument>
+                                    <InArgument x:TypeArguments="x:String" x:Key="in_CheaperMode">[cheaperMode]</InArgument>
+                                    <InArgument x:TypeArguments="x:String" x:Key="in_CheaperService">[cheaperService]</InArgument>
+                                    <InArgument x:TypeArguments="x:Double" x:Key="in_CheaperFare">[cheaperFare]</InArgument>
+                                    <InArgument x:TypeArguments="x:Double" x:Key="in_PriceDifference">[priceDifference]</InArgument>
+                                    <InArgument x:TypeArguments="x:String" x:Key="in_ComparisonMessage">[comparisonMessage]</InArgument>
+                                  </scg:Dictionary>
+                                </ui:InvokeWorkflowFile.Arguments>
+                              </ui:InvokeWorkflowFile>
+                              <FlowStep.Next>
+                                <FlowStep>
+                                  <TryCatch DisplayName="6. Save Report (optional)">
+                                    <TryCatch.Try>
+                                      <Sequence DisplayName="Save Output Files">
+                                        <ui:LogMessage DisplayName="Log Summary" Level="Info">
+                                          <ui:LogMessage.Message>
+                                            <InArgument x:TypeArguments="x:String">["COMPARISON SUMMARY | Route: " + in_Source + " to " + in_Destination + " | Date: " + in_TravelDate + " | RunMode: " + in_RunMode + " | Cheapest Overall: " + cheaperMode + " (" + cheaperService + ") Rs. " + cheaperFare.ToString + " | " + comparisonMessage]</InArgument>
+                                          </ui:LogMessage.Message>
+                                        </ui:LogMessage>
+                                        <If DisplayName="Write Flight Results?">
+                                          <If.Condition>
+                                            <InArgument x:TypeArguments="x:Boolean">[dt_Flights IsNot Nothing AndAlso dt_Flights.Rows.Count &gt; 0]</InArgument>
+                                          </If.Condition>
+                                          <If.Then>
+                                            <ui:WorkbookWriteRange AddHeaders="True" DataTable="[dt_Flights]" DisplayName="Write Flight Results" SheetName="Flights" StartingCell="A1" WorkbookPath="[FlightOutPath]" />
+                                          </If.Then>
+                                        </If>
+                                        <If DisplayName="Write Train Results?">
+                                          <If.Condition>
+                                            <InArgument x:TypeArguments="x:Boolean">[dt_Trains IsNot Nothing AndAlso dt_Trains.Rows.Count &gt; 0]</InArgument>
+                                          </If.Condition>
+                                          <If.Then>
+                                            <ui:WorkbookWriteRange AddHeaders="True" DataTable="[dt_Trains]" DisplayName="Write Train Results" SheetName="Trains" StartingCell="A1" WorkbookPath="[TrainOutPath]" />
+                                          </If.Then>
+                                        </If>
+                                        <ui:LogMessage DisplayName="Log Report Saved" Level="Info">
+                                          <ui:LogMessage.Message>
+                                            <InArgument x:TypeArguments="x:String">["Detailed result files saved to the Output folder: " + OutputDir]</InArgument>
+                                          </ui:LogMessage.Message>
+                                        </ui:LogMessage>
+                                      </Sequence>
+                                    </TryCatch.Try>
+                                    <TryCatch.Catches>
+                                      <Catch x:TypeArguments="s:Exception" DisplayName="Catch Report Error">
+                                        <ActivityAction x:TypeArguments="s:Exception">
+                                          <ActivityAction.Argument>
+                                            <DelegateInArgument x:TypeArguments="s:Exception" Name="exReport" />
+                                          </ActivityAction.Argument>
+                                          <ui:LogMessage DisplayName="Log Report Warning" Level="Warn">
+                                            <ui:LogMessage.Message>
+                                              <InArgument x:TypeArguments="x:String">["Could not save one or more output files (this does not affect the on-screen results): " + exReport.Message]</InArgument>
+                                            </ui:LogMessage.Message>
+                                          </ui:LogMessage>
+                                        </ActivityAction>
+                                      </Catch>
+                                    </TryCatch.Catches>
+                                  </TryCatch>
+                                </FlowStep>
+                              </FlowStep.Next>
+                            </FlowStep>
+                          </FlowStep.Next>
+                        </FlowStep>
+                      </FlowStep.Next>
+                    </FlowStep>
+                  </FlowStep.Next>
+                </FlowStep>
+              </FlowStep.Next>
+            </FlowStep>
+          </Flowchart>
+          <ui:LogMessage DisplayName="Log Finish" Level="Info">
+            <ui:LogMessage.Message>
+              <InArgument x:TypeArguments="x:String">["===== Comparison finished successfully ====="]</InArgument>
+            </ui:LogMessage.Message>
+          </ui:LogMessage>
+        </Sequence>
+      </TryCatch.Try>
+      <TryCatch.Catches>
+        <Catch x:TypeArguments="s:Exception" DisplayName="Catch All Errors">
+          <ActivityAction x:TypeArguments="s:Exception">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="s:Exception" Name="ex" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Handle Error">
+              <ui:LogMessage DisplayName="Log Error" Level="Error">
+                <ui:LogMessage.Message>
+                  <InArgument x:TypeArguments="x:String">["Unexpected error: " + ex.Message]</InArgument>
+                </ui:LogMessage.Message>
+              </ui:LogMessage>
+              <ui:MessageBox Caption="Travel Price Comparison - Error" DisplayName="Show Error">
+                <ui:MessageBox.Text>
+                  <InArgument x:TypeArguments="x:String">["An unexpected error occurred:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine + "Please check that the Data folder contains DemoFlights.xlsx and DemoTrains.xlsx, then run again in DEMO mode."]</InArgument>
+                </ui:MessageBox.Text>
+              </ui:MessageBox>
+            </Sequence>
+          </ActivityAction>
+        </Catch>
+      </TryCatch.Catches>
+    </TryCatch>
+  </Sequence>
+</Activity>
