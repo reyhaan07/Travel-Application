@@ -78,10 +78,5 @@
         <InArgument x:TypeArguments="x:Double">[If(out_Row IsNot Nothing, CDbl(out_Row("Fare").ToString.Trim), 0.0)]</InArgument>
       </Assign.Value>
     </Assign>
-    <ui:LogMessage DisplayName="Log Cheapest Flight Result" Level="Info">
-      <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:String">[If(out_Found, "Cheapest flight fare = " + out_Fare.ToString, "No valid flight fare found.")]</InArgument>
-      </ui:LogMessage.Message>
-    </ui:LogMessage>
   </Sequence>
 </Activity>

@@ -77,11 +77,6 @@
     <TryCatch DisplayName="Main Safety Net">
       <TryCatch.Try>
         <Sequence DisplayName="Main Process">
-          <ui:LogMessage DisplayName="Log Start" Level="Info">
-            <ui:LogMessage.Message>
-              <InArgument x:TypeArguments="x:String">["===== Centralized Travel Price Comparison System started ====="]</InArgument>
-            </ui:LogMessage.Message>
-          </ui:LogMessage>
           <Assign DisplayName="Set Project Directory">
             <Assign.To>
               <OutArgument x:TypeArguments="x:String">[ProjectDir]</OutArgument>
@@ -271,11 +266,6 @@
                               <FlowStep.Next>
                                 <FlowStep>
                                   <Sequence DisplayName="6. Save Report">
-                                    <ui:LogMessage DisplayName="Log Summary" Level="Info">
-                                      <ui:LogMessage.Message>
-                                        <InArgument x:TypeArguments="x:String">["COMPARISON SUMMARY | Route: " + in_Source + " to " + in_Destination + " | Date: " + in_TravelDate + " | RunMode: " + in_RunMode + " | Cheapest Overall: " + cheaperMode + " (" + cheaperService + ") Rs. " + cheaperFare.ToString + " | " + comparisonMessage]</InArgument>
-                                      </ui:LogMessage.Message>
-                                    </ui:LogMessage>
                                   </Sequence>
                                 </FlowStep>
                               </FlowStep.Next>
@@ -289,11 +279,6 @@
               </FlowStep.Next>
             </FlowStep>
           </Flowchart>
-          <ui:LogMessage DisplayName="Log Finish" Level="Info">
-            <ui:LogMessage.Message>
-              <InArgument x:TypeArguments="x:String">["===== Comparison finished successfully ====="]</InArgument>
-            </ui:LogMessage.Message>
-          </ui:LogMessage>
         </Sequence>
       </TryCatch.Try>
       <TryCatch.Catches>
@@ -303,11 +288,6 @@
               <DelegateInArgument x:TypeArguments="s:Exception" Name="ex" />
             </ActivityAction.Argument>
             <Sequence DisplayName="Handle Error">
-              <ui:LogMessage DisplayName="Log Error" Level="Error">
-                <ui:LogMessage.Message>
-                  <InArgument x:TypeArguments="x:String">["Unexpected error: " + ex.Message]</InArgument>
-                </ui:LogMessage.Message>
-              </ui:LogMessage>
               <ui:MessageBox Caption="Travel Price Comparison - Error" DisplayName="Show Error">
                 <ui:MessageBox.Text>
                   <InArgument x:TypeArguments="x:String">["An unexpected error occurred:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine + "Please check that the Data folder contains DemoFlights.xlsx and DemoTrains.xlsx, then run again in DEMO mode."]</InArgument>

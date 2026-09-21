@@ -55,15 +55,5 @@
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence DisplayName="Search Flights (LIVE placeholder)">
-    <ui:LogMessage DisplayName="Log Live Requested" Level="Info">
-      <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:String">["LIVE flight search requested for " + in_Source + " to " + in_Destination + " on " + in_TravelDate + " (site: " + in_LiveSiteUrl + ")."]</InArgument>
-      </ui:LogMessage.Message>
-    </ui:LogMessage>
-    <ui:LogMessage DisplayName="Log Live Not Configured" Level="Warn">
-      <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:String">["LIVE browser extraction is not built into this scaffold. To enable it, open Workflows\SearchFlights.xaml in UiPath Studio and add: 'Use Application/Browser' (or 'Open Browser') to in_LiveSiteUrl, then 'Type Into' the source/destination/date fields, 'Click' the Search button, and 'Extract Table Data' from the results table (HTML id='flightsTable') into out_FlightsTable. Leaving out_FlightsTable empty now, so the caller safely uses DEMO data."]</InArgument>
-      </ui:LogMessage.Message>
-    </ui:LogMessage>
   </Sequence>
 </Activity>

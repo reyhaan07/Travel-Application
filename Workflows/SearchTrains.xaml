@@ -55,15 +55,5 @@
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence DisplayName="Search Trains (LIVE placeholder)">
-    <ui:LogMessage DisplayName="Log Live Requested" Level="Info">
-      <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:String">["LIVE train search requested for " + in_Source + " to " + in_Destination + " on " + in_TravelDate + " (site: " + in_LiveSiteUrl + ")."]</InArgument>
-      </ui:LogMessage.Message>
-    </ui:LogMessage>
-    <ui:LogMessage DisplayName="Log Live Not Configured" Level="Warn">
-      <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:String">["LIVE browser extraction is not built into this scaffold. To enable it, open Workflows\SearchTrains.xaml in UiPath Studio and add: 'Use Application/Browser' (or 'Open Browser') to in_LiveSiteUrl, then 'Type Into' the source/destination/date fields, 'Click' the Search button, and 'Extract Table Data' from the results table (HTML id='trainsTable') into out_TrainsTable. Leaving out_TrainsTable empty now, so the caller safely uses DEMO data."]</InArgument>
-      </ui:LogMessage.Message>
-    </ui:LogMessage>
   </Sequence>
 </Activity>

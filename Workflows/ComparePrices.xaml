@@ -287,10 +287,5 @@
         </If>
       </If.Else>
     </If>
-    <ui:LogMessage DisplayName="Log Comparison Result" Level="Info">
-      <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:String">["Comparison result -> Cheaper mode: " + out_CheaperMode + " | Service: " + out_CheaperService + " | Fare: " + out_CheaperFare.ToString + " | Difference: " + out_PriceDifference.ToString]</InArgument>
-      </ui:LogMessage.Message>
-    </ui:LogMessage>
   </Sequence>
 </Activity>

@@ -21,17 +21,13 @@
       <x:String>System.Collections</x:String>
       <x:String>System.Collections.Generic</x:String>
       <x:String>System.Data</x:String>
-      <x:String>System.Diagnostics</x:String>
-      <x:String>System.IO</x:String>
       <x:String>System.Linq</x:String>
       <x:String>System.Xml</x:String>
       <x:String>System.Text</x:String>
       <x:String>System.Xml.Linq</x:String>
       <x:String>UiPath.Core</x:String>
       <x:String>UiPath.Core.Activities</x:String>
-      <x:String>System.Windows.Markup</x:String>
       <x:String>System.Collections.ObjectModel</x:String>
-      <x:String>System.Activities.DynamicUpdate</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -56,50 +52,27 @@
       <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Extract Train Data">
+  <Sequence DisplayName="Extract Data">
     <Sequence.Variables>
       <Variable x:TypeArguments="sd:DataColumn" Name="tmpCol" />
       <Variable x:TypeArguments="sd:DataRow" Name="tmpRow" />
     </Sequence.Variables>
-    <ui:LogMessage DisplayName="Log Train Acquisition" Level="Info">
-      <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:String">["Acquiring TRAIN data. RunMode = " + in_RunMode]</InArgument>
-      </ui:LogMessage.Message>
-    </ui:LogMessage>
     <If DisplayName="Live Mode?">
       <If.Condition>
         <InArgument x:TypeArguments="x:Boolean">[in_RunMode = "Live"]</InArgument>
       </If.Condition>
       <If.Then>
-        <TryCatch DisplayName="Try Live Train Extraction">
-          <TryCatch.Try>
-            <ui:InvokeWorkflowFile DisplayName="Invoke SearchTrains (Live)" WorkflowFileName="Workflows\SearchTrains.xaml">
-              <ui:InvokeWorkflowFile.Arguments>
-                <scg:Dictionary x:TypeArguments="x:String, Argument">
-                  <InArgument x:TypeArguments="x:String" x:Key="in_Source">[in_Source]</InArgument>
-                  <InArgument x:TypeArguments="x:String" x:Key="in_Destination">[in_Destination]</InArgument>
-                  <InArgument x:TypeArguments="x:String" x:Key="in_TravelDate">[in_TravelDate]</InArgument>
-                  <InArgument x:TypeArguments="x:String" x:Key="in_LiveSiteUrl">[in_LiveSiteUrl]</InArgument>
-                  <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_TrainsTable">[out_TrainsTable]</OutArgument>
-                </scg:Dictionary>
-              </ui:InvokeWorkflowFile.Arguments>
-            </ui:InvokeWorkflowFile>
-          </TryCatch.Try>
-          <TryCatch.Catches>
-            <Catch x:TypeArguments="s:Exception" DisplayName="Catch Live Failure">
-              <ActivityAction x:TypeArguments="s:Exception">
-                <ActivityAction.Argument>
-                  <DelegateInArgument x:TypeArguments="s:Exception" Name="exLive" />
-                </ActivityAction.Argument>
-                <ui:LogMessage DisplayName="Log Live Failure" Level="Warn">
-                  <ui:LogMessage.Message>
-                    <InArgument x:TypeArguments="x:String">["Live train extraction failed: " + exLive.Message + ". Falling back to demo data."]</InArgument>
-                  </ui:LogMessage.Message>
-                </ui:LogMessage>
-              </ActivityAction>
-            </Catch>
-          </TryCatch.Catches>
-        </TryCatch>
+        <ui:InvokeWorkflowFile DisplayName="Invoke SearchTrains (Live)" WorkflowFileName="Workflows\SearchTrains.xaml">
+          <ui:InvokeWorkflowFile.Arguments>
+            <scg:Dictionary x:TypeArguments="x:String, Argument">
+              <InArgument x:TypeArguments="x:String" x:Key="in_Source">[in_Source]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_Destination">[in_Destination]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_TravelDate">[in_TravelDate]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_LiveSiteUrl">[in_LiveSiteUrl]</InArgument>
+              <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_TrainsTable">[out_TrainsTable]</OutArgument>
+            </scg:Dictionary>
+          </ui:InvokeWorkflowFile.Arguments>
+        </ui:InvokeWorkflowFile>
       </If.Then>
     </If>
     <If DisplayName="Need Demo Data?">
@@ -107,13 +80,8 @@
         <InArgument x:TypeArguments="x:Boolean">[out_TrainsTable Is Nothing OrElse out_TrainsTable.Rows.Count = 0]</InArgument>
       </If.Condition>
       <If.Then>
-        <Sequence DisplayName="Build Demo Trains (in-memory sample)">
-          <ui:LogMessage DisplayName="Log Demo Load" Level="Info">
-            <ui:LogMessage.Message>
-              <InArgument x:TypeArguments="x:String">["Loading built-in DEMO train data (mirrors " + in_DemoFilePath + ")."]</InArgument>
-            </ui:LogMessage.Message>
-          </ui:LogMessage>
-          <Assign DisplayName="New Trains Table">
+        <Sequence DisplayName="Build Demo Data (in-memory sample)">
+          <Assign DisplayName="New Table">
             <Assign.To>
               <OutArgument x:TypeArguments="sd:DataTable">[out_TrainsTable]</OutArgument>
             </Assign.To>
@@ -212,10 +180,5 @@
         </Sequence>
       </If.Then>
     </If>
-    <ui:LogMessage DisplayName="Log Train Row Count" Level="Info">
-      <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:String">["Train rows available: " + If(out_TrainsTable Is Nothing, "0", out_TrainsTable.Rows.Count.ToString)]</InArgument>
-      </ui:LogMessage.Message>
-    </ui:LogMessage>
   </Sequence>
 </Activity>

@@ -136,10 +136,5 @@
         <InArgument x:TypeArguments="x:String">[If(String.IsNullOrWhiteSpace(tempRun), "Demo", If(tempRun.ToLower.Contains("live"), "Live", "Demo"))]</InArgument>
       </Assign.Value>
     </Assign>
-    <ui:LogMessage DisplayName="Log Collected Inputs" Level="Info">
-      <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:String">["Inputs collected -> Source: " + out_Source + " | Destination: " + out_Destination + " | Date: " + out_TravelDate + " | SearchMode: " + out_SearchMode + " | RunMode: " + out_RunMode]</InArgument>
-      </ui:LogMessage.Message>
-    </ui:LogMessage>
   </Sequence>
 </Activity>
