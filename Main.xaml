@@ -282,7 +282,7 @@
         </Sequence>
       </TryCatch.Try>
       <TryCatch.Catches>
-        <Catch x:TypeArguments="s:Exception" DisplayName="Catch All Errors">
+        <Catch x:TypeArguments="s:Exception">
           <ActivityAction x:TypeArguments="s:Exception">
             <ActivityAction.Argument>
               <DelegateInArgument x:TypeArguments="s:Exception" Name="ex" />
@@ -290,7 +290,7 @@
             <Sequence DisplayName="Handle Error">
               <ui:MessageBox Caption="Travel Price Comparison - Error" DisplayName="Show Error">
                 <ui:MessageBox.Text>
-                  <InArgument x:TypeArguments="x:String">["An unexpected error occurred:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine + "Please check that the Data folder contains DemoFlights.xlsx and DemoTrains.xlsx, then run again in DEMO mode."]</InArgument>
+                  <InArgument x:TypeArguments="x:String">["An unexpected error occurred:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine + "Please try running again in DEMO mode."]</InArgument>
                 </ui:MessageBox.Text>
               </ui:MessageBox>
             </Sequence>
