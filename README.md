@@ -26,6 +26,9 @@ automation.
 5. Press **OK** through the five dialogs to accept the defaults.
 6. Read the three result message boxes. 🎉
 
+📄 **Printable one-pager: [`Documentation/HOW_TO_RUN.pdf`](Documentation/HOW_TO_RUN.pdf)** — a
+step-by-step "how to run it in UiPath Studio" guide (great to hand in with the project).
+
 Full details: [`Documentation/SETUP.md`](Documentation/SETUP.md) ·
 Presentation script: [`Documentation/DEMO_GUIDE.md`](Documentation/DEMO_GUIDE.md)
 
