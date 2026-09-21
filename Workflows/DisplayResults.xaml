@@ -65,39 +65,14 @@
       <Variable x:TypeArguments="x:String" Name="msgOverall" />
       <Variable x:TypeArguments="x:String" Name="dummy" />
     </Sequence.Variables>
-    <Assign DisplayName="Flight Header">
+    <Assign DisplayName="Build Flight Message">
       <Assign.To>
         <OutArgument x:TypeArguments="x:String">[msgFlight]</OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:String">["===== OUTPUT 1 of 3 : CHEAPEST FLIGHT =====" + Environment.NewLine + "(" + in_RunMode + " MODE - sample/demo data, not live prices)" + Environment.NewLine + "Route: " + in_Source + " to " + in_Destination + Environment.NewLine + "Date : " + in_TravelDate + Environment.NewLine + Environment.NewLine]</InArgument>
+        <InArgument x:TypeArguments="x:String">[in_Source + " to " + in_Destination + "   (" + in_RunMode + " sample data)" + Environment.NewLine + Environment.NewLine + If(in_FlightFound AndAlso in_FlightRow IsNot Nothing, "Airline : " + in_FlightRow("Airline").ToString + " (" + in_FlightRow("FlightNumber").ToString + ")" + Environment.NewLine + "Time : " + in_FlightRow("DepartureTime").ToString + " to " + in_FlightRow("ArrivalTime").ToString + " (" + in_FlightRow("Duration").ToString + ")" + Environment.NewLine + "Fare : Rs. " + in_FlightRow("Fare").ToString, "No valid flight was found for this journey.")]</InArgument>
       </Assign.Value>
     </Assign>
-    <If DisplayName="Flight Found?">
-      <If.Condition>
-        <InArgument x:TypeArguments="x:Boolean">[in_FlightFound AndAlso in_FlightRow IsNot Nothing]</InArgument>
-      </If.Condition>
-      <If.Then>
-        <Assign DisplayName="Append Flight Details">
-          <Assign.To>
-            <OutArgument x:TypeArguments="x:String">[msgFlight]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="x:String">[msgFlight + "Airline         : " + in_FlightRow("Airline").ToString + Environment.NewLine + "Flight Number   : " + in_FlightRow("FlightNumber").ToString + Environment.NewLine + "Departure Time  : " + in_FlightRow("DepartureTime").ToString + Environment.NewLine + "Arrival Time    : " + in_FlightRow("ArrivalTime").ToString + Environment.NewLine + "Duration        : " + in_FlightRow("Duration").ToString + Environment.NewLine + "Fare            : Rs. " + in_FlightRow("Fare").ToString]</InArgument>
-          </Assign.Value>
-        </Assign>
-      </If.Then>
-      <If.Else>
-        <Assign DisplayName="Append No Flight">
-          <Assign.To>
-            <OutArgument x:TypeArguments="x:String">[msgFlight]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="x:String">[msgFlight + "No valid flight was found for this journey."]</InArgument>
-          </Assign.Value>
-        </Assign>
-      </If.Else>
-    </If>
     <ui:InputDialog DisplayName="Show Cheapest Flight" Title="OUTPUT 1 of 3 : Cheapest Flight">
       <ui:InputDialog.Label>
         <InArgument x:TypeArguments="x:String">[msgFlight]</InArgument>
@@ -106,39 +81,14 @@
         <OutArgument x:TypeArguments="x:String">[dummy]</OutArgument>
       </ui:InputDialog.Result>
     </ui:InputDialog>
-    <Assign DisplayName="Train Header">
+    <Assign DisplayName="Build Train Message">
       <Assign.To>
         <OutArgument x:TypeArguments="x:String">[msgTrain]</OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:String">["===== OUTPUT 2 of 3 : CHEAPEST TRAIN =====" + Environment.NewLine + "(" + in_RunMode + " MODE - sample/demo data, not live prices)" + Environment.NewLine + "Route: " + in_Source + " to " + in_Destination + Environment.NewLine + "Date : " + in_TravelDate + Environment.NewLine + Environment.NewLine]</InArgument>
+        <InArgument x:TypeArguments="x:String">[in_Source + " to " + in_Destination + "   (" + in_RunMode + " sample data)" + Environment.NewLine + Environment.NewLine + If(in_TrainFound AndAlso in_TrainRow IsNot Nothing, "Train : " + in_TrainRow("TrainName").ToString + " (" + in_TrainRow("TrainNumber").ToString + ")" + Environment.NewLine + "Time : " + in_TrainRow("DepartureTime").ToString + " to " + in_TrainRow("ArrivalTime").ToString + " (" + in_TrainRow("Duration").ToString + ")" + Environment.NewLine + "Fare : Rs. " + in_TrainRow("Fare").ToString, "No valid train was found for this journey.")]</InArgument>
       </Assign.Value>
     </Assign>
-    <If DisplayName="Train Found?">
-      <If.Condition>
-        <InArgument x:TypeArguments="x:Boolean">[in_TrainFound AndAlso in_TrainRow IsNot Nothing]</InArgument>
-      </If.Condition>
-      <If.Then>
-        <Assign DisplayName="Append Train Details">
-          <Assign.To>
-            <OutArgument x:TypeArguments="x:String">[msgTrain]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="x:String">[msgTrain + "Train Name      : " + in_TrainRow("TrainName").ToString + Environment.NewLine + "Train Number    : " + in_TrainRow("TrainNumber").ToString + Environment.NewLine + "Departure Time  : " + in_TrainRow("DepartureTime").ToString + Environment.NewLine + "Arrival Time    : " + in_TrainRow("ArrivalTime").ToString + Environment.NewLine + "Duration        : " + in_TrainRow("Duration").ToString + Environment.NewLine + "Fare            : Rs. " + in_TrainRow("Fare").ToString]</InArgument>
-          </Assign.Value>
-        </Assign>
-      </If.Then>
-      <If.Else>
-        <Assign DisplayName="Append No Train">
-          <Assign.To>
-            <OutArgument x:TypeArguments="x:String">[msgTrain]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="x:String">[msgTrain + "No valid train was found for this journey."]</InArgument>
-          </Assign.Value>
-        </Assign>
-      </If.Else>
-    </If>
     <ui:InputDialog DisplayName="Show Cheapest Train" Title="OUTPUT 2 of 3 : Cheapest Train">
       <ui:InputDialog.Label>
         <InArgument x:TypeArguments="x:String">[msgTrain]</InArgument>
@@ -147,39 +97,14 @@
         <OutArgument x:TypeArguments="x:String">[dummy]</OutArgument>
       </ui:InputDialog.Result>
     </ui:InputDialog>
-    <Assign DisplayName="Overall Header">
+    <Assign DisplayName="Build Overall Message">
       <Assign.To>
         <OutArgument x:TypeArguments="x:String">[msgOverall]</OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:String">["===== OUTPUT 3 of 3 : CHEAPEST OVERALL =====" + Environment.NewLine + "(" + in_RunMode + " MODE - sample/demo data, not live prices)" + Environment.NewLine + "Route: " + in_Source + " to " + in_Destination + Environment.NewLine + Environment.NewLine]</InArgument>
+        <InArgument x:TypeArguments="x:String">[If(in_CheaperMode &lt;&gt; "None", "Cheaper mode : " + in_CheaperMode + Environment.NewLine + "Service : " + in_CheaperService + Environment.NewLine + "Fare : Rs. " + in_CheaperFare.ToString + Environment.NewLine + "Saves Rs. " + in_PriceDifference.ToString + " vs the other option", in_ComparisonMessage)]</InArgument>
       </Assign.Value>
     </Assign>
-    <If DisplayName="Any Option Found?">
-      <If.Condition>
-        <InArgument x:TypeArguments="x:Boolean">[in_CheaperMode &lt;&gt; "None"]</InArgument>
-      </If.Condition>
-      <If.Then>
-        <Assign DisplayName="Append Overall Details">
-          <Assign.To>
-            <OutArgument x:TypeArguments="x:String">[msgOverall]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="x:String">[msgOverall + "Cheaper Transport Mode : " + in_CheaperMode + Environment.NewLine + "Service Name           : " + in_CheaperService + Environment.NewLine + "Fare                   : Rs. " + in_CheaperFare.ToString + Environment.NewLine + "Price Difference       : Rs. " + in_PriceDifference.ToString + " (versus the other option)" + Environment.NewLine + Environment.NewLine + in_ComparisonMessage]</InArgument>
-          </Assign.Value>
-        </Assign>
-      </If.Then>
-      <If.Else>
-        <Assign DisplayName="Append No Option">
-          <Assign.To>
-            <OutArgument x:TypeArguments="x:String">[msgOverall]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="x:String">[msgOverall + in_ComparisonMessage]</InArgument>
-          </Assign.Value>
-        </Assign>
-      </If.Else>
-    </If>
     <ui:InputDialog DisplayName="Show Cheapest Overall" Title="OUTPUT 3 of 3 : Cheapest Overall">
       <ui:InputDialog.Label>
         <InArgument x:TypeArguments="x:String">[msgOverall]</InArgument>
