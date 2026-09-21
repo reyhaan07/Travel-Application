@@ -12,7 +12,7 @@ Studio.
 | Windows 10/11 | UiPath Studio is a Windows application. |
 | **UiPath Studio** (Community Edition is free) | 2022.10 or newer recommended. Download from the UiPath website and sign in with a free UiPath account. |
 | Internet (first open only) | Needed once so Studio can **restore the activity packages**. After that, DEMO mode runs offline. |
-| Microsoft Excel | **Not required.** The project uses *Workbook* Read/Write Range activities, which read `.xlsx` files without Excel installed. |
+| Microsoft Excel | **Not required.** The demo builds its sample data in memory, so no Excel is needed. |
 | Google Chrome + UiPath Extension | **Only for LIVE mode** (optional). Not needed for DEMO mode. |
 
 ---
@@ -47,8 +47,8 @@ The project depends on three standard UiPath packages (declared in
 
 | Package | Purpose |
 |---------|---------|
-| `UiPath.System.Activities` | Input Dialog, Message Box, Assign, If, For Each, Invoke Workflow, Try Catch, Log Message. |
-| `UiPath.Excel.Activities`  | Workbook Read Range / Write Range for the demo data and output files. |
+| `UiPath.System.Activities` | Input Dialog, Message Box, Assign, If, Invoke Workflow File, Try Catch, Log Message. |
+| `UiPath.Excel.Activities`  | Excel support (optional; the demo uses built-in sample data). |
 | `UiPath.UIAutomation.Activities` | Open Browser, Type Into, Click for LIVE mode. |
 
 **If a pinned version is not found** (you may see an unresolved dependency):
@@ -80,7 +80,7 @@ minute. The workflows do not depend on a specific patch version.
 | Symptom | Fix |
 |---------|-----|
 | "Some dependencies could not be resolved" | You are offline, or the pinned version isn't in your feed. Connect to the internet and let Studio restore, or open **Manage Packages** and install the latest of the three packages (see step 3). |
-| Red error icon on an activity after opening | Make sure all three packages finished restoring, then click **Save** to let Studio re-validate. If a single property shows an error because your package version differs slightly, click the activity and re-select the property (e.g. re-pick the Excel file in a Read Range). |
+| Red error icon on an activity after opening | Make sure all three packages finished restoring, then click **Save** to let Studio re-validate. If a single property shows an error because your package version differs slightly, click the activity and re-select that property. |
 | "Could not load demo flight/train data" message | Confirm `Data\DemoFlights.xlsx` and `Data\DemoTrains.xlsx` exist in the project folder and are not open in Excel. |
 | Nothing happens after inputs | Check the **Output** panel logs. Every step logs an `Info` message; errors are logged and also shown in a final error message box. |
 | The `Main.xaml` flowchart boxes look stacked on top of each other | Purely cosmetic. Drag them apart, or right-click the canvas → **Auto Arrange**. Execution is unaffected. |

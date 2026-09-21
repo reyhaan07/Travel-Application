@@ -7,9 +7,9 @@ train fares for a journey and shows exactly three results:
 2. **Cheapest train**
 3. **Cheapest overall** (flight vs train, with the price difference)
 
-No Python, Java, Node.js, React, backend, or external API server. Just UiPath
-workflows, activities, variables/arguments, Excel activities, and browser
-automation.
+No Python, Java, Node.js, React, backend, or external API server — just UiPath
+workflows, activities, variables/arguments, and expressions. (Excel and browser
+automation packages are included so you can extend it in Studio.)
 
 > **DEMO DATA:** The sample fares in this project are **static demo values for
 > learning only — they are NOT live prices and are NOT from MakeMyTrip** or any
@@ -53,8 +53,8 @@ The comparison is real logic over the Excel data — edit a fare in
 |---|---|---|
 | Data source | Built-in sample data (mirrors `Data/DemoFlights.xlsx` / `DemoTrains.xlsx`) | Local demo website `LiveDemoSite/index.html` |
 | Needs internet/browser | No | Chrome + UiPath extension |
-| Reliability | Always works, offline | Demonstrates browser automation; extraction step is configured in Studio |
-| Purpose | The classroom demonstration | Shows the reusable scraping architecture |
+| Reliability | Always works, offline | Placeholder; you add the browser + extraction steps in Studio |
+| Purpose | The classroom demonstration | Optional template for plugging in a real (authorized) source |
 
 LIVE mode **automatically falls back to DEMO data** if anything fails, so the
 three outputs always appear. We deliberately do **not** scrape MakeMyTrip —
@@ -72,8 +72,8 @@ CentralizedTravelPriceComparison/
 │   ├── GetTravelInputs.xaml        # Ask source / destination / date / mode / run-mode
 │   ├── ExtractFlightData.xaml      # Demo: read Excel  | Live: invoke SearchFlights
 │   ├── ExtractTrainData.xaml       # Demo: read Excel  | Live: invoke SearchTrains
-│   ├── SearchFlights.xaml          # LIVE browser automation (open/type/click)
-│   ├── SearchTrains.xaml           # LIVE browser automation (open/type/click)
+│   ├── SearchFlights.xaml          # LIVE placeholder (add browser steps in Studio)
+│   ├── SearchTrains.xaml           # LIVE placeholder (add browser steps in Studio)
 │   ├── FindCheapestFlight.xaml     # Min valid fare over the flights DataTable
 │   ├── FindCheapestTrain.xaml      # Min valid fare over the trains DataTable
 │   ├── ComparePrices.xaml          # Flight vs train, price difference, edge cases
@@ -98,9 +98,9 @@ CentralizedTravelPriceComparison/
 
 | Package | Used for |
 |---------|----------|
-| `UiPath.System.Activities` | Input Dialog, Message Box, Assign, If, For Each, Invoke Workflow File, Try Catch, Log Message |
+| `UiPath.System.Activities` | Input Dialog, Message Box, Assign, If, Invoke Workflow File, Try Catch, Log Message |
 | `UiPath.Excel.Activities` | Excel support (optional; the demo uses built-in sample data) |
-| `UiPath.UIAutomation.Activities` | Open Browser, Type Into, Click (LIVE mode) |
+| `UiPath.UIAutomation.Activities` | Optional LIVE browser automation you add in Studio (not needed for DEMO) |
 
 `project.json` pins reasonable versions; if a version is unavailable in your
 feed, install the latest of each via **Manage Packages** (one click). Target
@@ -111,9 +111,9 @@ compatibility.
 
 ## How the three outputs are computed
 
-- **Cheapest flight / train:** `FindCheapest*.xaml` loops the DataTable, parses
-  the `Fare` column with `Double.TryParse` (skipping blank/invalid fares), and
-  keeps the row with the smallest positive fare.
+- **Cheapest flight / train:** `FindCheapest*.xaml` selects the row with the
+  smallest valid positive `Fare` with a short LINQ query over the DataTable
+  (`.Where(...).OrderBy(...).FirstOrDefault()`), skipping blank/invalid fares.
 - **Cheapest overall:** `ComparePrices.xaml` compares the two cheapest fares,
   reports the cheaper mode, the service name, the fare, and the **price
   difference**. It handles: both found, only one found, none found, and ties

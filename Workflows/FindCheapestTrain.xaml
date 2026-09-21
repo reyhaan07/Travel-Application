@@ -59,83 +59,30 @@
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence DisplayName="Find Cheapest Train">
-    <Sequence.Variables>
-      <Variable x:TypeArguments="x:Double" Name="currentFare" />
-    </Sequence.Variables>
-    <Assign DisplayName="Init Found = False">
+    <Assign DisplayName="Find Cheapest Train Row">
+      <Assign.To>
+        <OutArgument x:TypeArguments="sd:DataRow">[out_Row]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="sd:DataRow">[in_TrainsTable.Select().Where(Function(r) IsNumeric(r("Fare").ToString.Trim) AndAlso CDbl(r("Fare").ToString.Trim) &gt; 0).OrderBy(Function(r) CDbl(r("Fare").ToString.Trim)).FirstOrDefault()]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Set Found Flag">
       <Assign.To>
         <OutArgument x:TypeArguments="x:Boolean">[out_Found]</OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:Boolean">[False]</InArgument>
+        <InArgument x:TypeArguments="x:Boolean">[out_Row IsNot Nothing]</InArgument>
       </Assign.Value>
     </Assign>
-    <Assign DisplayName="Init Fare = 0">
+    <Assign DisplayName="Set Cheapest Fare">
       <Assign.To>
         <OutArgument x:TypeArguments="x:Double">[out_Fare]</OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:Double">[0]</InArgument>
+        <InArgument x:TypeArguments="x:Double">[If(out_Row IsNot Nothing, CDbl(out_Row("Fare").ToString.Trim), 0.0)]</InArgument>
       </Assign.Value>
     </Assign>
-    <If DisplayName="Table Has Rows">
-      <If.Condition>
-        <InArgument x:TypeArguments="x:Boolean">[in_TrainsTable IsNot Nothing AndAlso in_TrainsTable.Rows.Count &gt; 0]</InArgument>
-      </If.Condition>
-      <If.Then>
-        <ui:ForEach x:TypeArguments="sd:DataRow" DisplayName="For Each Train Row" Values="[in_TrainsTable.Select()]">
-          <ui:ForEach.Body>
-            <ActivityAction x:TypeArguments="sd:DataRow">
-              <ActivityAction.Argument>
-                <DelegateInArgument x:TypeArguments="sd:DataRow" Name="row" />
-              </ActivityAction.Argument>
-              <Sequence DisplayName="Evaluate Row">
-                <If DisplayName="Fare Is Valid Number">
-                  <If.Condition>
-                    <InArgument x:TypeArguments="x:Boolean">[Double.TryParse(row("Fare").ToString.Trim, currentFare) AndAlso currentFare &gt; 0]</InArgument>
-                  </If.Condition>
-                  <If.Then>
-                    <If DisplayName="Is Cheaper So Far">
-                      <If.Condition>
-                        <InArgument x:TypeArguments="x:Boolean">[(Not out_Found) OrElse (out_Fare &gt; currentFare)]</InArgument>
-                      </If.Condition>
-                      <If.Then>
-                        <Sequence DisplayName="Store New Cheapest">
-                          <Assign DisplayName="Save Fare">
-                            <Assign.To>
-                              <OutArgument x:TypeArguments="x:Double">[out_Fare]</OutArgument>
-                            </Assign.To>
-                            <Assign.Value>
-                              <InArgument x:TypeArguments="x:Double">[currentFare]</InArgument>
-                            </Assign.Value>
-                          </Assign>
-                          <Assign DisplayName="Save Row">
-                            <Assign.To>
-                              <OutArgument x:TypeArguments="sd:DataRow">[out_Row]</OutArgument>
-                            </Assign.To>
-                            <Assign.Value>
-                              <InArgument x:TypeArguments="sd:DataRow">[row]</InArgument>
-                            </Assign.Value>
-                          </Assign>
-                          <Assign DisplayName="Mark Found">
-                            <Assign.To>
-                              <OutArgument x:TypeArguments="x:Boolean">[out_Found]</OutArgument>
-                            </Assign.To>
-                            <Assign.Value>
-                              <InArgument x:TypeArguments="x:Boolean">[True]</InArgument>
-                            </Assign.Value>
-                          </Assign>
-                        </Sequence>
-                      </If.Then>
-                    </If>
-                  </If.Then>
-                </If>
-              </Sequence>
-            </ActivityAction>
-          </ui:ForEach.Body>
-        </ui:ForEach>
-      </If.Then>
-    </If>
     <ui:LogMessage DisplayName="Log Cheapest Train Result" Level="Info">
       <ui:LogMessage.Message>
         <InArgument x:TypeArguments="x:String">[If(out_Found, "Cheapest train fare = " + out_Fare.ToString, "No valid train fare found.")]</InArgument>

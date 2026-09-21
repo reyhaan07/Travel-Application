@@ -16,7 +16,7 @@ Main.xaml  (Sequence → Try/Catch → Flowchart)
    ├─ 2. Acquire Data
    │      ├─ if Flights/Both → ExtractFlightData.xaml → dt_Flights
    │      └─ if Trains/Both  → ExtractTrainData.xaml  → dt_Trains
-   │           (each: DEMO = Workbook Read Range on the .xlsx;
+   │           (each: DEMO = build the sample DataTable in memory;
    │                  LIVE = Invoke Search*.xaml, else fall back to DEMO)
    │
    ├─ 3. Find Cheapest
@@ -27,7 +27,7 @@ Main.xaml  (Sequence → Try/Catch → Flowchart)
    │
    ├─ 5. DisplayResults.xaml ......... 3 Message Boxes (the required outputs)
    │
-   └─ 6. Save Report (Try/Catch) ..... Workbook Write Range → Output/*.xlsx + summary log
+   └─ 6. Save Report ................. writes a one-line summary to the log/Output panel
 ```
 
 The whole process is wrapped in a top-level **Try/Catch** so any unexpected
@@ -91,24 +91,23 @@ error becomes one clear message box instead of a crash.
 
 ## Key expressions (VB, UiPath-compatible)
 
-**Parse & validate a fare (skip blanks / non-numbers / non-positive):**
+**Pick the cheapest valid fare (LINQ over the DataTable):**
 ```vb
-Double.TryParse(row("Fare").ToString.Trim, currentFare) AndAlso currentFare > 0
+in_FlightsTable.Select().
+  Where(Function(r) IsNumeric(r("Fare").ToString.Trim) AndAlso CDbl(r("Fare").ToString.Trim) > 0).
+  OrderBy(Function(r) CDbl(r("Fare").ToString.Trim)).
+  FirstOrDefault()
 ```
-`Double.TryParse` returns True only for a valid number and writes it into
-`currentFare`; the `> 0` guard drops zero/negative fares.
+`Select()` returns the rows, `Where` keeps only valid positive fares, `OrderBy`
+sorts ascending by fare, and `FirstOrDefault` returns the cheapest row (or
+`Nothing` if none qualify).
 
-**Keep the smallest fare seen so far:**
+**Build the sample tables in memory (DEMO — no Excel activity needed):**
 ```vb
-(Not out_Found) OrElse (out_Fare > currentFare)
+out_FlightsTable = New System.Data.DataTable()
+out_FlightsTable.Columns.Add("Airline")   ' one Add per column
+out_FlightsTable.Rows.Add("SpiceJet", "SG-401", "18:40", "21:35", "2h 55m", "4499")
 ```
-True for the first valid row, or whenever the current row is cheaper.
-
-**Iterate DataTable rows in a typed For Each (`TypeArgument = System.Data.DataRow`):**
-```vb
-in_FlightsTable.Select()
-```
-`DataTable.Select()` returns a `DataRow()` array — a clean typed enumerable.
 
 **Build a service label without a null-reference when nothing was found
 (`If(...)` short-circuits):**
@@ -141,7 +140,7 @@ the data, or the extraction and comparison will not find the columns.
 ## Design choices
 
 - **Windows-Legacy / VB** target for the broadest UiPath Studio compatibility
-  and to use the stable *Workbook* Excel activities (no MS Excel install needed).
+  and for the widest activity compatibility across Studio versions.
 - **Invoke Workflow File** for a clean, modular structure (one job per file) that
   matches the required project layout.
 - **DataRow passing** between Find/Compare/Display keeps arguments few and avoids

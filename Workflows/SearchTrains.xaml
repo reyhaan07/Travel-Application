@@ -59,47 +59,16 @@
       <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Search Trains (LIVE)">
-    <ui:LogMessage DisplayName="Log Live Start" Level="Info">
+  <Sequence DisplayName="Search Trains (LIVE placeholder)">
+    <ui:LogMessage DisplayName="Log Live Requested" Level="Info">
       <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:String">["LIVE MODE: opening travel site to search trains from " + in_Source + " to " + in_Destination + " on " + in_TravelDate]</InArgument>
+        <InArgument x:TypeArguments="x:String">["LIVE train search requested for " + in_Source + " to " + in_Destination + " on " + in_TravelDate + " (site: " + in_LiveSiteUrl + ")."]</InArgument>
       </ui:LogMessage.Message>
     </ui:LogMessage>
-    <ui:OpenBrowser BrowserType="Chrome" DisplayName="Open Demo Travel Site" Url="[in_LiveSiteUrl]">
-      <ui:OpenBrowser.Body>
-        <ActivityAction x:TypeArguments="ui:Browser">
-          <ActivityAction.Argument>
-            <DelegateInArgument x:TypeArguments="ui:Browser" Name="ContextBrowser" />
-          </ActivityAction.Argument>
-          <Sequence DisplayName="Fill Form And Search">
-            <ui:TypeInto Activate="True" ClickBeforeTyping="True" DisplayName="Type Source" EmptyField="True" Text="[in_Source]">
-              <ui:TypeInto.Target>
-                <ui:Target Selector="&lt;webctrl id='source' tag='INPUT' /&gt;" WaitForReady="INTERACTIVE" />
-              </ui:TypeInto.Target>
-            </ui:TypeInto>
-            <ui:TypeInto Activate="True" ClickBeforeTyping="True" DisplayName="Type Destination" EmptyField="True" Text="[in_Destination]">
-              <ui:TypeInto.Target>
-                <ui:Target Selector="&lt;webctrl id='destination' tag='INPUT' /&gt;" WaitForReady="INTERACTIVE" />
-              </ui:TypeInto.Target>
-            </ui:TypeInto>
-            <ui:TypeInto Activate="True" ClickBeforeTyping="True" DisplayName="Type Travel Date" EmptyField="True" Text="[in_TravelDate]">
-              <ui:TypeInto.Target>
-                <ui:Target Selector="&lt;webctrl id='travelDate' tag='INPUT' /&gt;" WaitForReady="INTERACTIVE" />
-              </ui:TypeInto.Target>
-            </ui:TypeInto>
-            <ui:Click ClickType="CLICK_SINGLE" DisplayName="Click Search Fares" MouseButton="BTN_LEFT">
-              <ui:Click.Target>
-                <ui:Target Selector="&lt;webctrl id='searchBtn' tag='BUTTON' /&gt;" WaitForReady="INTERACTIVE" />
-              </ui:Click.Target>
-            </ui:Click>
-            <ui:LogMessage DisplayName="Log Extraction Note" Level="Warn">
-              <ui:LogMessage.Message>
-                <InArgument x:TypeArguments="x:String">["LIVE train extraction step is not wired yet. In UiPath Studio, add an 'Extract Table Data' (Data Scraping) activity here targeting the results table (HTML id='trainsTable') and assign its output to out_TrainsTable. Leaving it empty now so the caller safely uses DEMO data."]</InArgument>
-              </ui:LogMessage.Message>
-            </ui:LogMessage>
-          </Sequence>
-        </ActivityAction>
-      </ui:OpenBrowser.Body>
-    </ui:OpenBrowser>
+    <ui:LogMessage DisplayName="Log Live Not Configured" Level="Warn">
+      <ui:LogMessage.Message>
+        <InArgument x:TypeArguments="x:String">["LIVE browser extraction is not built into this scaffold. To enable it, open Workflows\SearchTrains.xaml in UiPath Studio and add: 'Use Application/Browser' (or 'Open Browser') to in_LiveSiteUrl, then 'Type Into' the source/destination/date fields, 'Click' the Search button, and 'Extract Table Data' from the results table (HTML id='trainsTable') into out_TrainsTable. Leaving out_TrainsTable empty now, so the caller safely uses DEMO data."]</InArgument>
+      </ui:LogMessage.Message>
+    </ui:LogMessage>
   </Sequence>
 </Activity>

@@ -82,14 +82,15 @@ Columns must stay named exactly:
 
 ## 5. What DEMO mode vs LIVE mode means
 
-- **DEMO mode (default):** reads the sample Excel files. Deterministic, offline,
-  perfect for a classroom. Fares are **sample values, not live prices.**
-- **LIVE mode (optional):** opens a browser and drives the included local demo
-  website (`LiveDemoSite/index.html`). It demonstrates the browser-automation
-  architecture (open site, type source/destination/date, click Search). The
-  actual table-scraping step is intentionally left for you to add in Studio (see
-  below), because reliable data-scraping selectors must be captured with the
-  Studio wizard. Read `MAKEMYTRIP_NOTICE.md` for why we do not scrape MakeMyTrip.
+- **DEMO mode (default):** uses built-in sample data (mirrors the Excel files).
+  Deterministic, offline, perfect for a classroom. Fares are **sample values,
+  not live prices.**
+- **LIVE mode (optional):** a placeholder you complete in UiPath Studio. The
+  `Search*.xaml` workflows and the included local demo website
+  (`LiveDemoSite/index.html`) are ready for you to add browser automation
+  (open site, type source/destination/date, click Search, Extract Table Data).
+  Until you add those steps, LIVE automatically falls back to DEMO data. Read
+  `MAKEMYTRIP_NOTICE.md` for why we do not scrape MakeMyTrip.
 
 ---
 
@@ -101,19 +102,19 @@ Columns must stay named exactly:
 
 1. Install **Google Chrome** and the **UiPath Browser Extension for Chrome**
    (Studio → Home → Tools → UiPath Extensions → Chrome).
-2. Run `Main.xaml` and on the last dialog type **Live** instead of Demo.
-3. Chrome opens the local demo site and the automation fills the form and
-   clicks **Search Fares**.
-4. To actually scrape the results table, open `Workflows/SearchFlights.xaml`:
-   - Delete the yellow "Log Extraction Note" activity.
-   - Add an **Extract Table Data** (a.k.a. Data Scraping / Extract Structured
-     Data) activity in its place.
-   - Use the wizard to indicate the first cell of the **flights** table
-     (HTML `id='flightsTable'`) and choose "extract entire table".
-   - Set the activity's output DataTable to the argument **`out_FlightsTable`**.
-   - Repeat in `Workflows/SearchTrains.xaml` for the **trains** table
-     (`id='trainsTable'`) into **`out_TrainsTable`**.
-5. Re-run in LIVE mode. The same three outputs now come from the scraped table.
+2. Open `Workflows/SearchFlights.xaml` in Studio and build the browser steps:
+   - Add **Use Application/Browser** (or **Open Browser**) pointing to the
+     argument **`in_LiveSiteUrl`**.
+   - Inside it, add **Type Into** for the source/destination/date fields, then
+     **Click** the **Search Fares** button.
+   - Add **Extract Table Data** on the results table (HTML `id='flightsTable'`)
+     and set its output to the argument **`out_FlightsTable`**.
+   - You can delete the two "Log …" reminder activities that are in the file.
+3. Repeat in `Workflows/SearchTrains.xaml` for the **trains** table
+   (`id='trainsTable'`) into **`out_TrainsTable`**.
+4. Run `Main.xaml` and type **Live** on the last dialog. The three outputs now
+   come from the scraped table. (Anything left unconfigured falls back to DEMO
+   data, so the outputs always appear.)
 
 To later point LIVE mode at an **authorized** real source, change the
 `in_LiveSiteUrl` value (set in `Main.xaml`) and redo the Extract Table Data
