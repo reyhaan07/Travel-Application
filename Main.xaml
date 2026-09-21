@@ -73,6 +73,7 @@
       <Variable x:TypeArguments="x:String" Name="comparisonMessage" />
       <Variable x:TypeArguments="x:Double" Name="cheaperFare" />
       <Variable x:TypeArguments="x:Double" Name="priceDifference" />
+      <Variable x:TypeArguments="x:String" Name="dummy" />
     </Sequence.Variables>
     <TryCatch DisplayName="Main Safety Net">
       <TryCatch.Try>
@@ -288,11 +289,14 @@
               <DelegateInArgument x:TypeArguments="s:Exception" Name="ex" />
             </ActivityAction.Argument>
             <Sequence DisplayName="Handle Error">
-              <ui:MessageBox Caption="Travel Price Comparison - Error" DisplayName="Show Error">
-                <ui:MessageBox.Text>
+              <ui:InputDialog DisplayName="Show Error" Title="Travel Price Comparison - Error">
+                <ui:InputDialog.Label>
                   <InArgument x:TypeArguments="x:String">["An unexpected error occurred:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine + "Please try running again in DEMO mode."]</InArgument>
-                </ui:MessageBox.Text>
-              </ui:MessageBox>
+                </ui:InputDialog.Label>
+                <ui:InputDialog.Result>
+                  <OutArgument x:TypeArguments="x:String">[dummy]</OutArgument>
+                </ui:InputDialog.Result>
+              </ui:InputDialog>
             </Sequence>
           </ActivityAction>
         </Catch>

@@ -27,17 +27,13 @@
       <x:String>System.Collections</x:String>
       <x:String>System.Collections.Generic</x:String>
       <x:String>System.Data</x:String>
-      <x:String>System.Diagnostics</x:String>
-      <x:String>System.IO</x:String>
       <x:String>System.Linq</x:String>
       <x:String>System.Xml</x:String>
       <x:String>System.Text</x:String>
       <x:String>System.Xml.Linq</x:String>
       <x:String>UiPath.Core</x:String>
       <x:String>UiPath.Core.Activities</x:String>
-      <x:String>System.Windows.Markup</x:String>
       <x:String>System.Collections.ObjectModel</x:String>
-      <x:String>System.Activities.DynamicUpdate</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -67,6 +63,7 @@
       <Variable x:TypeArguments="x:String" Name="msgFlight" />
       <Variable x:TypeArguments="x:String" Name="msgTrain" />
       <Variable x:TypeArguments="x:String" Name="msgOverall" />
+      <Variable x:TypeArguments="x:String" Name="dummy" />
     </Sequence.Variables>
     <Assign DisplayName="Flight Header">
       <Assign.To>
@@ -101,11 +98,14 @@
         </Assign>
       </If.Else>
     </If>
-    <ui:MessageBox Caption="OUTPUT 1 of 3 : Cheapest Flight" DisplayName="Show Cheapest Flight">
-      <ui:MessageBox.Text>
+    <ui:InputDialog DisplayName="Show Cheapest Flight" Title="OUTPUT 1 of 3 : Cheapest Flight">
+      <ui:InputDialog.Label>
         <InArgument x:TypeArguments="x:String">[msgFlight]</InArgument>
-      </ui:MessageBox.Text>
-    </ui:MessageBox>
+      </ui:InputDialog.Label>
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:String">[dummy]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
     <Assign DisplayName="Train Header">
       <Assign.To>
         <OutArgument x:TypeArguments="x:String">[msgTrain]</OutArgument>
@@ -139,11 +139,14 @@
         </Assign>
       </If.Else>
     </If>
-    <ui:MessageBox Caption="OUTPUT 2 of 3 : Cheapest Train" DisplayName="Show Cheapest Train">
-      <ui:MessageBox.Text>
+    <ui:InputDialog DisplayName="Show Cheapest Train" Title="OUTPUT 2 of 3 : Cheapest Train">
+      <ui:InputDialog.Label>
         <InArgument x:TypeArguments="x:String">[msgTrain]</InArgument>
-      </ui:MessageBox.Text>
-    </ui:MessageBox>
+      </ui:InputDialog.Label>
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:String">[dummy]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
     <Assign DisplayName="Overall Header">
       <Assign.To>
         <OutArgument x:TypeArguments="x:String">[msgOverall]</OutArgument>
@@ -177,10 +180,13 @@
         </Assign>
       </If.Else>
     </If>
-    <ui:MessageBox Caption="OUTPUT 3 of 3 : Cheapest Overall" DisplayName="Show Cheapest Overall">
-      <ui:MessageBox.Text>
+    <ui:InputDialog DisplayName="Show Cheapest Overall" Title="OUTPUT 3 of 3 : Cheapest Overall">
+      <ui:InputDialog.Label>
         <InArgument x:TypeArguments="x:String">[msgOverall]</InArgument>
-      </ui:MessageBox.Text>
-    </ui:MessageBox>
+      </ui:InputDialog.Label>
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:String">[dummy]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
   </Sequence>
 </Activity>
