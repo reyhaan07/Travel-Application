@@ -62,10 +62,7 @@
       <Variable x:TypeArguments="x:String" Name="ProjectDir" />
       <Variable x:TypeArguments="x:String" Name="DemoFlightsPath" />
       <Variable x:TypeArguments="x:String" Name="DemoTrainsPath" />
-      <Variable x:TypeArguments="x:String" Name="OutputDir" />
       <Variable x:TypeArguments="x:String" Name="LiveSiteUrl" />
-      <Variable x:TypeArguments="x:String" Name="FlightOutPath" />
-      <Variable x:TypeArguments="x:String" Name="TrainOutPath" />
       <Variable x:TypeArguments="sd:DataTable" Name="dt_Flights" />
       <Variable x:TypeArguments="sd:DataTable" Name="dt_Trains" />
       <Variable x:TypeArguments="x:Boolean" Name="flightFound" />
@@ -114,36 +111,12 @@
               <InArgument x:TypeArguments="x:String">[System.IO.Path.Combine(ProjectDir, "Data", "DemoTrains.xlsx")]</InArgument>
             </Assign.Value>
           </Assign>
-          <Assign DisplayName="Set Output Directory">
-            <Assign.To>
-              <OutArgument x:TypeArguments="x:String">[OutputDir]</OutArgument>
-            </Assign.To>
-            <Assign.Value>
-              <InArgument x:TypeArguments="x:String">[System.IO.Path.Combine(ProjectDir, "Output")]</InArgument>
-            </Assign.Value>
-          </Assign>
           <Assign DisplayName="Set Live Site Url">
             <Assign.To>
               <OutArgument x:TypeArguments="x:String">[LiveSiteUrl]</OutArgument>
             </Assign.To>
             <Assign.Value>
               <InArgument x:TypeArguments="x:String">["file:///" + ProjectDir.Replace("\", "/") + "/LiveDemoSite/index.html"]</InArgument>
-            </Assign.Value>
-          </Assign>
-          <Assign DisplayName="Set Flight Output Path">
-            <Assign.To>
-              <OutArgument x:TypeArguments="x:String">[FlightOutPath]</OutArgument>
-            </Assign.To>
-            <Assign.Value>
-              <InArgument x:TypeArguments="x:String">[System.IO.Path.Combine(OutputDir, "FlightResults.xlsx")]</InArgument>
-            </Assign.Value>
-          </Assign>
-          <Assign DisplayName="Set Train Output Path">
-            <Assign.To>
-              <OutArgument x:TypeArguments="x:String">[TrainOutPath]</OutArgument>
-            </Assign.To>
-            <Assign.Value>
-              <InArgument x:TypeArguments="x:String">[System.IO.Path.Combine(OutputDir, "TrainResults.xlsx")]</InArgument>
             </Assign.Value>
           </Assign>
           <Flowchart DisplayName="Travel Comparison Process">
@@ -302,52 +275,13 @@
                               </ui:InvokeWorkflowFile>
                               <FlowStep.Next>
                                 <FlowStep>
-                                  <TryCatch DisplayName="6. Save Report (optional)">
-                                    <TryCatch.Try>
-                                      <Sequence DisplayName="Save Output Files">
-                                        <ui:LogMessage DisplayName="Log Summary" Level="Info">
-                                          <ui:LogMessage.Message>
-                                            <InArgument x:TypeArguments="x:String">["COMPARISON SUMMARY | Route: " + in_Source + " to " + in_Destination + " | Date: " + in_TravelDate + " | RunMode: " + in_RunMode + " | Cheapest Overall: " + cheaperMode + " (" + cheaperService + ") Rs. " + cheaperFare.ToString + " | " + comparisonMessage]</InArgument>
-                                          </ui:LogMessage.Message>
-                                        </ui:LogMessage>
-                                        <If DisplayName="Write Flight Results?">
-                                          <If.Condition>
-                                            <InArgument x:TypeArguments="x:Boolean">[dt_Flights IsNot Nothing AndAlso dt_Flights.Rows.Count &gt; 0]</InArgument>
-                                          </If.Condition>
-                                          <If.Then>
-                                            <ui:WorkbookWriteRange AddHeaders="True" DataTable="[dt_Flights]" DisplayName="Write Flight Results" SheetName="Flights" StartingCell="A1" WorkbookPath="[FlightOutPath]" />
-                                          </If.Then>
-                                        </If>
-                                        <If DisplayName="Write Train Results?">
-                                          <If.Condition>
-                                            <InArgument x:TypeArguments="x:Boolean">[dt_Trains IsNot Nothing AndAlso dt_Trains.Rows.Count &gt; 0]</InArgument>
-                                          </If.Condition>
-                                          <If.Then>
-                                            <ui:WorkbookWriteRange AddHeaders="True" DataTable="[dt_Trains]" DisplayName="Write Train Results" SheetName="Trains" StartingCell="A1" WorkbookPath="[TrainOutPath]" />
-                                          </If.Then>
-                                        </If>
-                                        <ui:LogMessage DisplayName="Log Report Saved" Level="Info">
-                                          <ui:LogMessage.Message>
-                                            <InArgument x:TypeArguments="x:String">["Detailed result files saved to the Output folder: " + OutputDir]</InArgument>
-                                          </ui:LogMessage.Message>
-                                        </ui:LogMessage>
-                                      </Sequence>
-                                    </TryCatch.Try>
-                                    <TryCatch.Catches>
-                                      <Catch x:TypeArguments="s:Exception" DisplayName="Catch Report Error">
-                                        <ActivityAction x:TypeArguments="s:Exception">
-                                          <ActivityAction.Argument>
-                                            <DelegateInArgument x:TypeArguments="s:Exception" Name="exReport" />
-                                          </ActivityAction.Argument>
-                                          <ui:LogMessage DisplayName="Log Report Warning" Level="Warn">
-                                            <ui:LogMessage.Message>
-                                              <InArgument x:TypeArguments="x:String">["Could not save one or more output files (this does not affect the on-screen results): " + exReport.Message]</InArgument>
-                                            </ui:LogMessage.Message>
-                                          </ui:LogMessage>
-                                        </ActivityAction>
-                                      </Catch>
-                                    </TryCatch.Catches>
-                                  </TryCatch>
+                                  <Sequence DisplayName="6. Save Report">
+                                    <ui:LogMessage DisplayName="Log Summary" Level="Info">
+                                      <ui:LogMessage.Message>
+                                        <InArgument x:TypeArguments="x:String">["COMPARISON SUMMARY | Route: " + in_Source + " to " + in_Destination + " | Date: " + in_TravelDate + " | RunMode: " + in_RunMode + " | Cheapest Overall: " + cheaperMode + " (" + cheaperService + ") Rs. " + cheaperFare.ToString + " | " + comparisonMessage]</InArgument>
+                                      </ui:LogMessage.Message>
+                                    </ui:LogMessage>
+                                  </Sequence>
                                 </FlowStep>
                               </FlowStep.Next>
                             </FlowStep>

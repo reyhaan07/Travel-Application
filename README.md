@@ -51,7 +51,7 @@ The comparison is real logic over the Excel data — edit a fare in
 
 | | DEMO mode (default) | LIVE mode (optional) |
 |---|---|---|
-| Data source | `Data/DemoFlights.xlsx`, `Data/DemoTrains.xlsx` | Local demo website `LiveDemoSite/index.html` |
+| Data source | Built-in sample data (mirrors `Data/DemoFlights.xlsx` / `DemoTrains.xlsx`) | Local demo website `LiveDemoSite/index.html` |
 | Needs internet/browser | No | Chrome + UiPath extension |
 | Reliability | Always works, offline | Demonstrates browser automation; extraction step is configured in Studio |
 | Purpose | The classroom demonstration | Shows the reusable scraping architecture |
@@ -99,7 +99,7 @@ CentralizedTravelPriceComparison/
 | Package | Used for |
 |---------|----------|
 | `UiPath.System.Activities` | Input Dialog, Message Box, Assign, If, For Each, Invoke Workflow File, Try Catch, Log Message |
-| `UiPath.Excel.Activities` | Workbook Read Range / Write Range |
+| `UiPath.Excel.Activities` | Excel support (optional; the demo uses built-in sample data) |
 | `UiPath.UIAutomation.Activities` | Open Browser, Type Into, Click (LIVE mode) |
 
 `project.json` pins reasonable versions; if a version is unavailable in your

@@ -62,6 +62,10 @@
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence DisplayName="Extract Train Data">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="sd:DataColumn" Name="tmpCol" />
+      <Variable x:TypeArguments="sd:DataRow" Name="tmpRow" />
+    </Sequence.Variables>
     <ui:LogMessage DisplayName="Log Train Acquisition" Level="Info">
       <ui:LogMessage.Message>
         <InArgument x:TypeArguments="x:String">["Acquiring TRAIN data. RunMode = " + in_RunMode]</InArgument>
@@ -103,37 +107,114 @@
         </TryCatch>
       </If.Then>
     </If>
-    <If DisplayName="Need Demo Fallback?">
+    <If DisplayName="Need Demo Data?">
       <If.Condition>
         <InArgument x:TypeArguments="x:Boolean">[out_TrainsTable Is Nothing OrElse out_TrainsTable.Rows.Count = 0]</InArgument>
       </If.Condition>
       <If.Then>
-        <TryCatch DisplayName="Load Demo Trains">
-          <TryCatch.Try>
-            <Sequence DisplayName="Read Demo Trains Excel">
-              <ui:LogMessage DisplayName="Log Demo Load" Level="Info">
-                <ui:LogMessage.Message>
-                  <InArgument x:TypeArguments="x:String">["Loading DEMO train data from: " + in_DemoFilePath]</InArgument>
-                </ui:LogMessage.Message>
-              </ui:LogMessage>
-              <ui:WorkbookReadRange AddHeaders="True" DataTable="[out_TrainsTable]" DisplayName="Read Demo Trains" Range="" SheetName="Sheet1" WorkbookPath="[in_DemoFilePath]" />
-            </Sequence>
-          </TryCatch.Try>
-          <TryCatch.Catches>
-            <Catch x:TypeArguments="s:Exception" DisplayName="Catch Demo Load Failure">
-              <ActivityAction x:TypeArguments="s:Exception">
-                <ActivityAction.Argument>
-                  <DelegateInArgument x:TypeArguments="s:Exception" Name="exDemo" />
-                </ActivityAction.Argument>
-                <ui:LogMessage DisplayName="Log Demo Failure" Level="Error">
-                  <ui:LogMessage.Message>
-                    <InArgument x:TypeArguments="x:String">["Could not load demo train data (" + in_DemoFilePath + "): " + exDemo.Message]</InArgument>
-                  </ui:LogMessage.Message>
-                </ui:LogMessage>
-              </ActivityAction>
-            </Catch>
-          </TryCatch.Catches>
-        </TryCatch>
+        <Sequence DisplayName="Build Demo Trains (in-memory sample)">
+          <ui:LogMessage DisplayName="Log Demo Load" Level="Info">
+            <ui:LogMessage.Message>
+              <InArgument x:TypeArguments="x:String">["Loading built-in DEMO train data (mirrors " + in_DemoFilePath + ")."]</InArgument>
+            </ui:LogMessage.Message>
+          </ui:LogMessage>
+          <Assign DisplayName="New Trains Table">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataTable">[out_TrainsTable]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable()]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column TrainName">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_TrainsTable.Columns.Add("TrainName")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column TrainNumber">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_TrainsTable.Columns.Add("TrainNumber")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column DepartureTime">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_TrainsTable.Columns.Add("DepartureTime")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column ArrivalTime">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_TrainsTable.Columns.Add("ArrivalTime")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column Duration">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_TrainsTable.Columns.Add("Duration")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column Fare">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_TrainsTable.Columns.Add("Fare")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Row Tamil Nadu SF Express">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[tmpRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[out_TrainsTable.Rows.Add("Tamil Nadu SF Express", "12621", "22:00", "07:15", "33h 15m", "2145")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Row Grand Trunk Express">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[tmpRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[out_TrainsTable.Rows.Add("Grand Trunk Express", "12615", "19:15", "06:50", "35h 35m", "1985")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Row Rajdhani Express">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[tmpRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[out_TrainsTable.Rows.Add("Rajdhani Express", "12433", "06:05", "10:30", "28h 25m", "3560")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Row Sanghamitra Express">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[tmpRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[out_TrainsTable.Rows.Add("Sanghamitra Express", "12295", "12:40", "22:10", "33h 30m", "2260")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Row AP Duronto Express">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[tmpRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[out_TrainsTable.Rows.Add("AP Duronto Express", "12283", "15:20", "20:00", "28h 40m", "3120")]</InArgument>
+            </Assign.Value>
+          </Assign>
+        </Sequence>
       </If.Then>
     </If>
     <ui:LogMessage DisplayName="Log Train Row Count" Level="Info">

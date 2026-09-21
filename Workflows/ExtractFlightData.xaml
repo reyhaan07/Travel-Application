@@ -62,6 +62,10 @@
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence DisplayName="Extract Flight Data">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="sd:DataColumn" Name="tmpCol" />
+      <Variable x:TypeArguments="sd:DataRow" Name="tmpRow" />
+    </Sequence.Variables>
     <ui:LogMessage DisplayName="Log Flight Acquisition" Level="Info">
       <ui:LogMessage.Message>
         <InArgument x:TypeArguments="x:String">["Acquiring FLIGHT data. RunMode = " + in_RunMode]</InArgument>
@@ -103,37 +107,114 @@
         </TryCatch>
       </If.Then>
     </If>
-    <If DisplayName="Need Demo Fallback?">
+    <If DisplayName="Need Demo Data?">
       <If.Condition>
         <InArgument x:TypeArguments="x:Boolean">[out_FlightsTable Is Nothing OrElse out_FlightsTable.Rows.Count = 0]</InArgument>
       </If.Condition>
       <If.Then>
-        <TryCatch DisplayName="Load Demo Flights">
-          <TryCatch.Try>
-            <Sequence DisplayName="Read Demo Flights Excel">
-              <ui:LogMessage DisplayName="Log Demo Load" Level="Info">
-                <ui:LogMessage.Message>
-                  <InArgument x:TypeArguments="x:String">["Loading DEMO flight data from: " + in_DemoFilePath]</InArgument>
-                </ui:LogMessage.Message>
-              </ui:LogMessage>
-              <ui:WorkbookReadRange AddHeaders="True" DataTable="[out_FlightsTable]" DisplayName="Read Demo Flights" Range="" SheetName="Sheet1" WorkbookPath="[in_DemoFilePath]" />
-            </Sequence>
-          </TryCatch.Try>
-          <TryCatch.Catches>
-            <Catch x:TypeArguments="s:Exception" DisplayName="Catch Demo Load Failure">
-              <ActivityAction x:TypeArguments="s:Exception">
-                <ActivityAction.Argument>
-                  <DelegateInArgument x:TypeArguments="s:Exception" Name="exDemo" />
-                </ActivityAction.Argument>
-                <ui:LogMessage DisplayName="Log Demo Failure" Level="Error">
-                  <ui:LogMessage.Message>
-                    <InArgument x:TypeArguments="x:String">["Could not load demo flight data (" + in_DemoFilePath + "): " + exDemo.Message]</InArgument>
-                  </ui:LogMessage.Message>
-                </ui:LogMessage>
-              </ActivityAction>
-            </Catch>
-          </TryCatch.Catches>
-        </TryCatch>
+        <Sequence DisplayName="Build Demo Flights (in-memory sample)">
+          <ui:LogMessage DisplayName="Log Demo Load" Level="Info">
+            <ui:LogMessage.Message>
+              <InArgument x:TypeArguments="x:String">["Loading built-in DEMO flight data (mirrors " + in_DemoFilePath + ")."]</InArgument>
+            </ui:LogMessage.Message>
+          </ui:LogMessage>
+          <Assign DisplayName="New Flights Table">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataTable">[out_FlightsTable]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataTable">[New System.Data.DataTable()]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column Airline">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_FlightsTable.Columns.Add("Airline")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column FlightNumber">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_FlightsTable.Columns.Add("FlightNumber")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column DepartureTime">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_FlightsTable.Columns.Add("DepartureTime")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column ArrivalTime">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_FlightsTable.Columns.Add("ArrivalTime")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column Duration">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_FlightsTable.Columns.Add("Duration")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Column Fare">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataColumn">[tmpCol]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataColumn">[out_FlightsTable.Columns.Add("Fare")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Row IndiGo">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[tmpRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[out_FlightsTable.Rows.Add("IndiGo", "6E-2043", "06:10", "08:55", "2h 45m", "4899")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Row Air India">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[tmpRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[out_FlightsTable.Rows.Add("Air India", "AI-539", "09:30", "12:20", "2h 50m", "5650")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Row Vistara">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[tmpRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[out_FlightsTable.Rows.Add("Vistara", "UK-822", "13:05", "15:55", "2h 50m", "6120")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Row SpiceJet">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[tmpRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[out_FlightsTable.Rows.Add("SpiceJet", "SG-401", "18:40", "21:35", "2h 55m", "4499")]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Assign DisplayName="Row Akasa Air">
+            <Assign.To>
+              <OutArgument x:TypeArguments="sd:DataRow">[tmpRow]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="sd:DataRow">[out_FlightsTable.Rows.Add("Akasa Air", "QP-1371", "21:15", "00:05", "2h 50m", "5210")]</InArgument>
+            </Assign.Value>
+          </Assign>
+        </Sequence>
       </If.Then>
     </If>
     <ui:LogMessage DisplayName="Log Flight Row Count" Level="Info">
