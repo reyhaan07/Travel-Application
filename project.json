@@ -1,6 +1,6 @@
 {
   "name": "CentralizedTravelPriceComparison",
-  "description": "Centralized Travel Price Comparison System - compares demo flight and train fares and reports the cheapest flight, cheapest train, and cheapest overall option. Built entirely with UiPath Studio (Windows-Legacy, VB).",
+  "description": "Centralized Travel Price Comparison System - compares demo flight and train fares and reports the cheapest flight, cheapest train, and cheapest overall option. Built entirely with UiPath Studio (Windows / .NET, VB).",
   "main": "Main.xaml",
   "dependencies": {
     "UiPath.Excel.Activities": "[2.12.3]",
@@ -55,5 +55,5 @@
   "isTemplate": false,
   "templateProjectData": {},
   "publishData": {},
-  "targetFramework": "Legacy"
+  "targetFramework": "Windows"
 }

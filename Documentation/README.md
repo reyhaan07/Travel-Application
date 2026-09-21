@@ -139,7 +139,7 @@ the data, or the extraction and comparison will not find the columns.
 
 ## Design choices
 
-- **Windows-Legacy / VB** target for the broadest UiPath Studio compatibility
+- **Windows (.NET) / VB** target, required by current UiPath Studio versions
   and for the widest activity compatibility across Studio versions.
 - **Invoke Workflow File** for a clean, modular structure (one job per file) that
   matches the required project layout.

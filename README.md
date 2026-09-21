@@ -67,7 +67,7 @@ three outputs always appear. We deliberately do **not** scrape MakeMyTrip —
 ```
 CentralizedTravelPriceComparison/
 ├── Main.xaml                       # Orchestrator (Flowchart + Try/Catch)
-├── project.json                    # UiPath project config (Windows-Legacy, VB)
+├── project.json                    # UiPath project config (Windows / .NET, VB)
 ├── Workflows/
 │   ├── GetTravelInputs.xaml        # Ask source / destination / date / mode / run-mode
 │   ├── ExtractFlightData.xaml      # Demo: read Excel  | Live: invoke SearchFlights
@@ -104,8 +104,9 @@ CentralizedTravelPriceComparison/
 
 `project.json` pins reasonable versions; if a version is unavailable in your
 feed, install the latest of each via **Manage Packages** (one click). Target
-framework is **Windows-Legacy (.NET Framework, VB)** for the widest Studio
-compatibility.
+framework is **Windows (.NET, VB)**, which current UiPath Studio versions
+require (the older Windows-Legacy compatibility is no longer supported by the
+latest Studio).
 
 ---
 
