@@ -1,110 +1,97 @@
-# Web Scraping Guide (UiPath Data Scraping)
+# Web Scraping Guide — REAL live data from Chrome (UiPath Data Scraping)
 
-This guide shows how to add **real web scraping** to the project using UiPath's
-built‑in **Data Scraping** wizard, scraping the included **local demo website**
-(`LiveDemoSite/index.html`). This is the standard, correct way to scrape in
-UiPath — the selectors are captured by the wizard, so it cannot be pre‑written
-in the file.
+This shows how to pull **real, live data** from a website through Chrome using
+UiPath's **Data Scraping** box (the "web scrape box"). We use
+**https://books.toscrape.com** — a real live site made for scraping practice
+(real titles + prices, no login, no CAPTCHA, fully permitted).
 
-> You will scrape the flights table (and trains table) from the local website
-> into a DataTable. It runs offline and does not touch MakeMyTrip or any live
-> site (see `MAKEMYTRIP_NOTICE.md`).
-
----
-
-## 0. One‑time prerequisites
-
-1. **Google Chrome** installed.
-2. **UiPath Chrome extension** installed:
-   Studio → **Home → Tools → UiPath Extensions → Chrome** → click **Install**.
-   (Then, in Chrome, enable the "UiPath Web Automation" extension if prompted.)
-3. The **UiPath.UIAutomation.Activities** package restored (it already is — you
-   can see it under *Dependencies* in the project).
+> ⚠️ Do NOT point this at MakeMyTrip / IRCTC / Goibibo etc. — those forbid
+> scraping and use CAPTCHA/anti-bot. See `MAKEMYTRIP_NOTICE.md`. The steps below
+> are identical for any site you are allowed to scrape.
 
 ---
 
-## 1. Open the local demo website
+## 0. One-time setup
+1. Install **Google Chrome**.
+2. Install the **UiPath Chrome extension**:
+   Studio → **Home → Tools → UiPath Extensions → Chrome → Install**.
+   Then in Chrome, turn the extension **On** if it asks.
 
-The file to scrape is in your project at:
+---
+
+## 1. Open the live website in Chrome
+Go to **https://books.toscrape.com** in Chrome. You'll see a grid of books, each
+with a **title** and a **price** (like £51.77). Keep this tab open.
+
+---
+
+## 2. Use the Data Scraping box (this is the web scraping)
+1. In UiPath Studio, open the workflow you want (e.g. create a new one, or open
+   `Workflows\SearchFlights.xaml`).
+2. Top ribbon **Design → Data Scraping** (the table/spider icon).
+3. A wizard opens: *"select the first element"* → switch to Chrome and **click
+   the title of the first book** (e.g. *A Light in the Attic*).
+4. *"select the second element"* → **click the title of the second book**
+   (e.g. *Tipping the Velvet*). UiPath now knows it's a repeating list.
+5. A preview grid appears with all the titles. In the little box, name the
+   column **`Title`** → click **Next**.
+6. It asks **"Extract Correlated Data?"** → click **Yes** (to add the price as a
+   second column):
+   - Click the **price of the first book** (£51.77), then the **price of the
+     second book**. Name this column **`Price`** → **Finish**.
+7. It asks about **multiple pages / max results**:
+   - For a quick demo, set **Maximum number of results = 20** (one page), or
+     leave 0 and click through the "next page" indication to scrape all pages.
+8. Choose where to store the result → it creates a **DataTable** variable
+   (e.g. `ExtractDataTable`). Studio drops a **Use Application/Browser** (or
+   Attach Browser) scope with an **Extract Table Data** activity inside.
+
+▶ **Run the workflow now** — Chrome opens the site and you get a DataTable of
+**real, live titles and prices**. That is genuine web scraping from Chrome. 🎉
+
+---
+
+## 3. (Optional) Show the scraped data / find the cheapest
+After the Extract Table Data activity, add these (all use activities your Studio
+already runs):
+
+**A. Just prove it worked** — add an **Input Dialog** (used here as a message
+box) with **Label** set to:
 ```
-LiveDemoSite\index.html
+"Scraped " + ExtractDataTable.Rows.Count.ToString + " books." + Environment.NewLine +
+"First: " + ExtractDataTable.Rows(0)("Title").ToString + " - " + ExtractDataTable.Rows(0)("Price").ToString
 ```
-Right‑click it in Windows → **Open with → Chrome** to see it. It has two clean
-tables: **Available Flights** (`id="flightsTable"`) and **Available Trains**
-(`id="trainsTable"`). Keep this Chrome tab open.
+(Set the Input Dialog's **Result** to any throwaway String variable.)
+
+**B. Find the cheapest book** — add two **Assign** activities:
+- `cheapestRow` (System.Data.DataRow) =
+```
+ExtractDataTable.Select().OrderBy(Function(r) CDbl(r("Price").ToString.Trim.Substring(r("Price").ToString.Trim.IndexOfAny("0123456789".ToCharArray())))).FirstOrDefault()
+```
+  *(That `Substring(...IndexOfAny(digits))` trick strips the "£" so the price
+  becomes a number, e.g. £51.77 → 51.77.)*
+- Then an **Input Dialog** with **Label** =
+```
+"Cheapest book: " + cheapestRow("Title").ToString + "  (" + cheapestRow("Price").ToString + ")"
+```
 
 ---
 
-## 2. Scrape the flights table with the wizard
-
-1. In UiPath Studio, open **`Workflows\SearchFlights.xaml`**.
-2. On the top ribbon (**Design** tab), click **Data Scraping** (the "Table
-   Extraction" / spider‑web icon).
-3. The wizard says "select the first element" — go to the Chrome tab and
-   **click the first cell** of the flights table (e.g. the word **IndiGo**).
-4. It asks for the second element — **click the second row's first cell**
-   (e.g. **Air India**). This tells UiPath it's a repeating table.
-5. A preview appears showing the columns. Click **Next / Finish** →
-   "Extract Correlated Data?" → for a single table click **No**.
-6. Studio drops an **Extract Table Data** (a.k.a. Extract Structured Data)
-   activity, usually inside a **Use Application/Browser** or **Attach Browser**
-   scope, with the output going to a `DataTable` variable (e.g. `ExtractDataTable`).
-
----
-
-## 3. Send the scraped data to the project
-
-The workflow `SearchFlights.xaml` has an output argument **`out_FlightsTable`**
-(type `System.Data.DataTable`). Point the scraping output to it:
-
-- Click the **Extract Table Data** activity → in **Properties**, set
-  **DataTable / Output** to **`out_FlightsTable`**
-  (or add an **Assign**: `out_FlightsTable = ExtractDataTable`).
-- Make sure the scraped column **headers match**: `Airline, FlightNumber,
-  DepartureTime, ArrivalTime, Duration, Fare`. In the wizard's preview you can
-  rename each column to these exact names (this matters so the "find cheapest"
-  step can read the `Fare` column).
-
-Repeat **Steps 2–3** in **`Workflows\SearchTrains.xaml`** for the **trains**
-table (`id="trainsTable"`) → output **`out_TrainsTable`**, columns
-`TrainName, TrainNumber, DepartureTime, ArrivalTime, Duration, Fare`.
-
----
-
-## 4. Run it in LIVE mode
-
-1. Run **`Main.xaml`**.
-2. On the **Run mode** prompt, type **`Live`** (instead of Demo).
-3. The project now calls your scraping workflows, extracts the tables from the
-   website, finds the cheapest flight/train, and shows the three results.
-
-> If the scrape returns nothing (site closed, extension missing, etc.), the
-> project automatically **falls back to the built‑in demo data**, so the three
-> outputs always appear.
-
----
-
-## 5. (Optional) Point it at a real, permitted site later
-
-To scrape a real website instead of the local demo:
-
-1. Change the **`in_LiveSiteUrl`** value in `Main.xaml` (the "Set Live Site Url"
-   Assign) to the site you are **authorised** to automate.
-2. Redo the **Data Scraping wizard** on that site's results table (selectors are
-   site‑specific).
-
-⚠️ Do **not** scrape MakeMyTrip or other sites whose terms forbid automated
-access, or that use CAPTCHA/anti‑bot protection. Use a site you own, a permitted
-test site, or an official API/data provider. See `MAKEMYTRIP_NOTICE.md`.
+## 4. (Optional) Feed it into this project's LIVE mode
+The travel project's LIVE mode expects flight/train tables with a `Fare` column,
+which books don't have — so keep the **travel comparison on DEMO data**. Use the
+books scrape above as your **standalone "real web scraping" demonstration**.
+(To scrape a real *travel* source later, it must be one that permits automation;
+then point `in_LiveSiteUrl` in `Main.xaml` at it and redo this wizard on its
+results table.)
 
 ---
 
 ## Troubleshooting
-
 | Problem | Fix |
 |---------|-----|
-| "Data Scraping" button greyed out / nothing happens | Install the **UiPath Chrome extension** (Step 0) and make sure a browser page is open and focused. |
-| Wizard can't select the element | Click precisely on the **text inside a table cell**, not the border. |
-| Columns have wrong names | In the wizard preview (or the Extract activity's *Configure Columns*), rename them to the exact names in Step 3. |
-| `Fare` shows text like "Rs. 4499" | Keep it as the plain number (`4899`, `1985`, …) as in the demo site, so the fare comparison can parse it. |
-| Live returns 0 rows | The project falls back to demo data automatically — check the browser opened and the extension is enabled. |
+| "Data Scraping" does nothing / greyed out | Install the **UiPath Chrome extension** (Step 0) and make sure the Chrome tab is open and focused. |
+| Wizard won't pick the element | Click precisely on the **text** (the title text / the price text), not the image or the card border. |
+| Price won't convert to a number | Use the `Substring(...IndexOfAny("0123456789"...))` expression above — it removes the "£" symbol. |
+| Only got a few rows | In the wizard's "maximum results" step set a bigger number, or enable next-page traversal. |
+| Nothing/blocked on a real fare site | That site forbids scraping — use a permitted site (this guide) instead. |
