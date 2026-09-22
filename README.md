@@ -29,6 +29,10 @@ automation packages are included so you can extend it in Studio.)
 📄 **Printable one-pager: [`Documentation/HOW_TO_RUN.pdf`](Documentation/HOW_TO_RUN.pdf)** — a
 step-by-step "how to run it in UiPath Studio" guide (great to hand in with the project).
 
+🕸️ **Web scraping: [`Documentation/WEBSCRAPING_GUIDE.md`](Documentation/WEBSCRAPING_GUIDE.md)**
+(also `.pdf`) — how to add UiPath **Data Scraping** on the included local demo
+site with the Studio wizard, and feed it into LIVE mode.
+
 Full details: [`Documentation/SETUP.md`](Documentation/SETUP.md) ·
 Presentation script: [`Documentation/DEMO_GUIDE.md`](Documentation/DEMO_GUIDE.md)
 
