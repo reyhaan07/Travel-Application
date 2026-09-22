@@ -30,8 +30,10 @@ automation packages are included so you can extend it in Studio.)
 step-by-step "how to run it in UiPath Studio" guide (great to hand in with the project).
 
 🕸️ **Web scraping: [`Documentation/WEBSCRAPING_GUIDE.md`](Documentation/WEBSCRAPING_GUIDE.md)**
-(also `.pdf`) — how to add UiPath **Data Scraping** on the included local demo
-site with the Studio wizard, and feed it into LIVE mode.
+(also `.pdf`) — how to scrape the **flight table and train table** from the
+included travel site in Chrome with the UiPath **Data Scraping** wizard, wire the
+result into `SearchFlights.xaml` / `SearchTrains.xaml`, and run in **LIVE** mode
+so the three outputs come from the scraped data.
 
 Full details: [`Documentation/SETUP.md`](Documentation/SETUP.md) ·
 Presentation script: [`Documentation/DEMO_GUIDE.md`](Documentation/DEMO_GUIDE.md)

@@ -54,6 +54,6 @@
       <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Search Trains (LIVE placeholder)">
+  <Sequence DisplayName="Search Trains - SCRAPE THE TRAINS TABLE HERE" sap2010:Annotation.AnnotationText="WEB SCRAPING GOES HERE (Trains). This box is empty on purpose - you fill it once with the Data Scraping wizard.&#10;&#10;1. Open Chrome at the travel site: the file LiveDemoSite\index.html (double-click it). Scroll to the 'Available Trains' table.&#10;2. Studio ribbon: Design -&gt; Data Scraping.&#10;3. Click a cell in the TRAINS table (e.g. Tamil Nadu SF Express). When asked for a 2nd element, click the next row's cell (Grand Trunk Express). UiPath detects the whole HTML table.&#10;4. The preview shows all 6 columns: TrainName, TrainNumber, DepartureTime, ArrivalTime, Duration, Fare. Keep them all -&gt; Finish (set Max results 0 = all rows).&#10;5. In the Extract Table Data activity, set its output DataTable property to:  out_TrainsTable  (so it feeds the comparison).&#10;&#10;Full click-by-click: Documentation\WEBSCRAPING_GUIDE.pdf">
   </Sequence>
 </Activity>

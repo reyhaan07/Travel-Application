@@ -54,6 +54,6 @@
       <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Search Flights (LIVE placeholder)">
+  <Sequence DisplayName="Search Flights - SCRAPE THE FLIGHTS TABLE HERE" sap2010:Annotation.AnnotationText="WEB SCRAPING GOES HERE (Flights). This box is empty on purpose - you fill it once with the Data Scraping wizard.&#10;&#10;1. Open Chrome at the travel site: the file LiveDemoSite\index.html (double-click it). It shows an 'Available Flights' table.&#10;2. Studio ribbon: Design -&gt; Data Scraping.&#10;3. Click a cell in the FLIGHTS table (e.g. IndiGo). When asked for a 2nd element, click the next row's cell (Air India). UiPath detects the whole HTML table.&#10;4. The preview shows all 6 columns: Airline, FlightNumber, DepartureTime, ArrivalTime, Duration, Fare. Keep them all -&gt; Finish (set Max results 0 = all rows).&#10;5. In the Extract Table Data activity, set its output DataTable property to:  out_FlightsTable  (so it feeds the comparison).&#10;&#10;Full click-by-click: Documentation\WEBSCRAPING_GUIDE.pdf">
   </Sequence>
 </Activity>
